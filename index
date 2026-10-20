@@ -1,0 +1,3008 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYTHON OOP ARENA: Arsitek Objek & Class (PID Interactive)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400..800;1,400..800&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Orbitron"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        arena: {
+                            bg: '#070B19',
+                            card: '#0F172A',
+                            panel: '#1E293B',
+                            cyan: '#00F0FF',
+                            purple: '#8B5CF6',
+                            yellow: '#FACC15',
+                            green: '#10B981',
+                            red: '#EF4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070B19;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.16) 0%, transparent 35%),
+                radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.14) 0%, transparent 35%),
+                linear-gradient(rgba(30, 41, 59, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.25) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            color: #F8FAFC;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.25), inset 0 0 15px rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.5);
+        }
+
+        .neon-border-purple {
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3), inset 0 0 15px rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.6);
+        }
+
+        .neon-border-yellow {
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.3), inset 0 0 12px rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.7);
+        }
+
+        .code-window {
+            background: #090D16;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F0FF;
+        }
+
+        @keyframes pulse-fast {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-fast {
+            animation: pulse-fast 1.2s infinite ease-in-out;
+        }
+
+        @keyframes float-robot {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float-robot 2.6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-400 selection:text-slate-950">
+
+    <header id="top-nav" class="w-full bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3 z-40 sticky top-0">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-400 via-purple-600 to-amber-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <i class="ph-bold ph-cube-transparent text-2xl text-white"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="font-display font-black text-lg md:text-xl tracking-wider bg-gradient-to-r from-cyan-300 via-white to-yellow-300 bg-clip-text text-transparent">PYTHON OOP ARENA</span>
+                    <span class="hidden sm:inline-block text-[11px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">PID Touch & Multiplayer</span>
+                </div>
+                <p class="text-xs text-slate-400">Class • Object • Atribut • Class Atribut • Constructor <code class="text-cyan-300">__init__</code> • <code class="text-yellow-300">self</code> • Method</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Quick PID Interactive Lab Button -->
+            <button onclick="window.app.openPIDLabModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400/20 to-purple-500/20 hover:from-amber-400/30 hover:to-purple-500/30 text-yellow-300 border border-yellow-400/50 text-xs font-extrabold transition shadow-md" title="Buka Simulasi Sentuh Pabrik Class & Object di Layar PID">
+                <i class="ph-fill ph-hand-tap text-base text-yellow-300"></i>
+                <span>Lab Sentuh OOP (PID)</span>
+            </button>
+
+            <!-- Cloud Connection Indicator -->
+            <div id="cloud-status-badge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-xs font-medium text-slate-300">
+                <span id="cloud-dot" class="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping"></span>
+                <span id="cloud-text">Menghubungkan Server...</span>
+            </div>
+
+            <!-- Sound toggle -->
+            <button id="btn-sound" onclick="window.app.toggleSound()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" title="Efek Suara Arena">
+                <i id="icon-sound" class="ph-bold ph-speaker-high text-lg text-cyan-400"></i>
+            </button>
+
+            <!-- Fullscreen PID Button -->
+            <button onclick="window.app.toggleFullScreen()" class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition" title="Layar Penuh untuk PID">
+                <i class="ph-bold ph-corners-out text-base text-cyan-400"></i>
+                <span>Layar Penuh PID</span>
+            </button>
+
+            <!-- Switch Role / Home Button -->
+            <button id="btn-back-home" onclick="window.app.confirmReturnHome()" class="hidden items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-bold transition">
+                <i class="ph-bold ph-sign-out text-base"></i>
+                <span>Menu Utama</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1920px] mx-auto px-3 sm:px-6 py-4 flex flex-col justify-center">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: LANDING / ROLE SELECTION           -->
+        <!-- ========================================== -->
+        <section id="view-landing" class="my-auto py-3">
+            <div class="max-w-6xl mx-auto">
+                <!-- Hero Banner -->
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs sm:text-sm font-semibold mb-3">
+                        <i class="ph-fill ph-hand-tap text-yellow-400 text-base"></i>
+                        <span>Interaksi Sentuh Langsung di Layar PID Kelas + Multiplayer HP/Laptop Murid</span>
+                    </div>
+                    <h1 class="font-display font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight text-white mb-3">
+                        ARSITEK <span class="bg-gradient-to-r from-cyan-400 via-purple-400 to-yellow-300 bg-clip-text text-transparent">CLASS & OBJECT PYTHON</span>
+                    </h1>
+                    <p class="text-slate-300 max-w-3xl mx-auto text-sm sm:text-base leading-relaxed">
+                        Kuasi fondasi <strong class="text-cyan-300">Pemrograman Berorientasi Objek (OOP)</strong> mulai dari <code class="font-mono text-cyan-300 bg-slate-800 px-1.5 py-0.5 rounded">class</code>, <code class="font-mono text-cyan-300 bg-slate-800 px-1.5 py-0.5 rounded">object</code>, <code class="font-mono text-purple-300 bg-slate-800 px-1.5 py-0.5 rounded">atribut</code>, <code class="font-mono text-purple-300 bg-slate-800 px-1.5 py-0.5 rounded">class atribut</code>, <code class="font-mono text-yellow-300 bg-slate-800 px-1.5 py-0.5 rounded">__init__</code>, <code class="font-mono text-yellow-300 bg-slate-800 px-1.5 py-0.5 rounded">self</code>, hingga <code class="font-mono text-emerald-300 bg-slate-800 px-1.5 py-0.5 rounded">method()</code> melalui interaksi langsung di papan **PID** maupun perangkat murid!
+                    </p>
+                </div>
+
+                <!-- Two Role Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+                    
+                    <!-- CARD A: PID / GURU & INTERAKSI SENTUH -->
+                    <div class="rounded-3xl bg-slate-900/90 neon-border-cyan p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 w-44 h-44 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div>
+                            <div class="flex items-center justify-between gap-4 mb-4">
+                                <span class="px-3.5 py-1 rounded-full bg-cyan-400/20 text-cyan-300 font-bold text-xs tracking-wider uppercase border border-cyan-400/40">Layar Utama Kelas (16:9 Touch)</span>
+                                <i class="ph-duotone ph-television-simple text-4xl text-cyan-400"></i>
+                            </div>
+                            <h2 class="font-display font-bold text-2xl sm:text-3xl text-white mb-2">Dashboard PID (Interaktif & Host)</h2>
+                            <p class="text-slate-300 text-sm sm:text-base mb-5">
+                                Dirancang khusus untuk layar sentuh **PID / TV Merah Putih**. Murid dapat **maju menyentuh layar PID secara langsung** untuk merakit Class & menjawab di papan, atau terhubung bersama-sama dari HP/Laptop!
+                            </p>
+                            <ul class="space-y-2 text-xs sm:text-sm text-slate-300 mb-6">
+                                <li class="flex items-center gap-2.5"><i class="ph-fill ph-hand-tap text-yellow-400 text-lg"></i> <span><strong>Mode Sentuh PID Langsung:</strong> Murid bisa maju ke depan kelas menyentuh jawaban & merakit kode di layar PID</span></li>
+                                <li class="flex items-center gap-2.5"><i class="ph-fill ph-cube text-cyan-400 text-lg"></i> <span><strong>Lab Pabrik Objek Visual:</strong> Simulasi interaktif membuat cetakan <code class="text-cyan-300">class</code>, instansiasi <code class="text-cyan-300">object</code>, dan memanggil <code class="text-cyan-300">method</code></span></li>
+                                <li class="flex items-center gap-2.5"><i class="ph-fill ph-users-three text-purple-400 text-lg"></i> <span><strong>Multiplayer Real-Time:</strong> Terhubung dengan HP/Laptop seluruh murid di kelas menggunakan QR/Kode Ruang</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button onclick="window.app.openHostSetup()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 font-display font-black text-base sm:text-lg tracking-wide shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-3 transition transform active:scale-95">
+                                <i class="ph-bold ph-game-controller text-2xl"></i>
+                                <span>BUKA ARENA DI LAYAR PID</span>
+                            </button>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <button onclick="window.app.openPIDLabModal()" class="py-3 px-4 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-yellow-300 border border-amber-400/50 text-xs font-bold flex items-center justify-center gap-2 transition">
+                                    <i class="ph-fill ph-flask text-base"></i>
+                                    <span>Buka Lab Sentuh Class & Object</span>
+                                </button>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="resume-room-input" type="text" maxlength="8" placeholder="Kode ruang lama" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-mono uppercase text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400">
+                                    <button onclick="window.app.resumeAsHost()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-bold transition whitespace-nowrap">
+                                        Buka
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD B: PERANGKAT MURID -->
+                    <div class="rounded-3xl bg-slate-900/90 neon-border-purple p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 w-44 h-44 bg-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div>
+                            <div class="flex items-center justify-between gap-4 mb-4">
+                                <span class="px-3.5 py-1 rounded-full bg-purple-500/20 text-purple-300 font-bold text-xs tracking-wider uppercase border border-purple-500/40">HP / Tablet / Laptop Murid</span>
+                                <i class="ph-duotone ph-device-mobile-camera text-4xl text-purple-400"></i>
+                            </div>
+                            <h2 class="font-display font-bold text-2xl sm:text-3xl text-white mb-2">Gabung Arena (Perangkat Murid)</h2>
+                            <p class="text-slate-300 text-sm sm:text-base mb-5">
+                                Masukkan Kode Ruang yang tampil di layar PID kelas dan nama panggilanmu untuk ikut merakit objek Python dan menyumbang skor bagi timmu.
+                            </p>
+
+                            <!-- Student Join Form -->
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Kode Ruang Permainan</label>
+                                    <input id="student-room-code" type="text" maxlength="8" placeholder="Contoh: OOP25" class="w-full bg-slate-950 border-2 border-purple-500/50 focus:border-cyan-400 rounded-2xl px-4 py-3 text-xl font-display font-black uppercase tracking-widest text-yellow-300 placeholder-slate-600 focus:outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Nama Panggilan Arsitek (Murid)</label>
+                                    <input id="student-nickname" type="text" maxlength="18" placeholder="Masukkan nama panggilanmu..." class="w-full bg-slate-950 border-2 border-slate-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-base font-bold text-white placeholder-slate-500 focus:outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Pilih Skuad Tim OOP</label>
+                                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" id="student-team-selector">
+                                        <button type="button" onclick="window.app.selectJoinTeam('AUTO')" data-team="AUTO" class="team-pick-btn col-span-2 sm:col-span-1 py-2 px-2 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-cyan-200 text-xs font-bold transition">Otomatis</button>
+                                        <button type="button" onclick="window.app.selectJoinTeam('CLASS-ARCH')" data-team="CLASS-ARCH" class="team-pick-btn py-2 px-2 rounded-xl border border-slate-700 bg-slate-800/80 text-cyan-300 text-xs font-bold transition">📐 Class</button>
+                                        <button type="button" onclick="window.app.selectJoinTeam('OBJ-FORGE')" data-team="OBJ-FORGE" class="team-pick-btn py-2 px-2 rounded-xl border border-slate-700 bg-slate-800/80 text-purple-300 text-xs font-bold transition">🤖 Object</button>
+                                        <button type="button" onclick="window.app.selectJoinTeam('INIT-CORE')" data-team="INIT-CORE" class="team-pick-btn py-2 px-2 rounded-xl border border-slate-700 bg-slate-800/80 text-yellow-300 text-xs font-bold transition">⚙️ Init</button>
+                                        <button type="button" onclick="window.app.selectJoinTeam('METHOD-X')" data-team="METHOD-X" class="team-pick-btn py-2 px-2 rounded-xl border border-slate-700 bg-slate-800/80 text-emerald-300 text-xs font-bold transition">⚡ Method</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="btn-student-join" onclick="window.app.joinRoomAsStudent()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-400 hover:from-purple-400 hover:to-cyan-300 text-slate-950 font-display font-black text-base sm:text-lg tracking-wide shadow-lg shadow-purple-500/25 flex items-center justify-center gap-3 transition transform active:scale-95">
+                            <i class="ph-bold ph-rocket-launch text-2xl"></i>
+                            <span>MASUK KE ARENA OOP</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 7 Core OOP Concepts Quick Strip -->
+                <div class="mt-6 rounded-2xl bg-slate-900/75 border border-slate-800 p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+                            <i class="ph-fill ph-book-open-text text-base"></i> 7 Materi Fondasi OOP Kelas X Fase E:
+                        </span>
+                        <div class="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-slate-700">1. Class (Blueprint)</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-purple-300 border border-slate-700">2. Object (Instance)</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-emerald-300 border border-slate-700">3. Instance Atribut</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-slate-700">4. Class Atribut</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-yellow-300 border border-slate-700">5. Constructor __init__</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-rose-300 border border-slate-700">6. Parameter self</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-blue-300 border border-slate-700">7. Method (Perilaku)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: PID HOST CONFIGURATION SETUP       -->
+        <!-- ========================================== -->
+        <section id="view-host-setup" class="hidden my-auto py-2">
+            <div class="max-w-6xl mx-auto rounded-3xl bg-slate-900/95 neon-border-cyan p-6 sm:p-8">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-5 mb-6">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Panel Kontrol Guru • Persiapan Ruang PID OOP</span>
+                        <h2 class="font-display font-black text-2xl sm:text-3xl text-white mt-1">Konfigurasi Sesi Pembelajaran OOP Python</h2>
+                    </div>
+                    <button onclick="window.app.showView('view-landing')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center gap-2">
+                        <i class="ph-bold ph-arrow-left"></i> Kembali
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left 7 Cols: Game Mode Selection -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2.5">1. Pilih Mode Permainan (Mendukung Sentuh PID & HP Murid)</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="setup-mode-grid">
+                                <button type="button" onclick="window.app.selectSetupMode('ALL')" data-mode="ALL" class="setup-mode-btn text-left p-3.5 rounded-2xl border-2 border-cyan-400 bg-cyan-500/15 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-display font-bold text-sm text-cyan-300">🌟 SEMUA MODE (PETUALANGAN OOP)</span>
+                                        <i class="ph-fill ph-sparkle text-yellow-400"></i>
+                                    </div>
+                                    <p class="text-xs text-slate-300">Kombinasi bertahap dari Konsep Class/Object, Prediksi Output, Bug Hunter `self`/`__init__`, Rakit Class hingga Boss Battle.</p>
+                                </button>
+
+                                <button type="button" onclick="window.app.selectSetupMode('MODE_A')" data-mode="MODE_A" class="setup-mode-btn text-left p-3.5 rounded-2xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-display font-bold text-sm text-white">Mode A: Tebak Output Objek</span>
+                                        <span class="text-[11px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">150 Poin Maks</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Prediksi hasil pemanggilan atribut, class atribut, dan method pada objek Python.</p>
+                                </button>
+
+                                <button type="button" onclick="window.app.selectSetupMode('MODE_B')" data-mode="MODE_B" class="setup-mode-btn text-left p-3.5 rounded-2xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-display font-bold text-sm text-white">Mode B: Bedah Konsep OOP</span>
+                                        <span class="text-[11px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">150 Poin Maks</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Identifikasi mana yang merupakan Class, Object, Constructor <code class="text-cyan-300">__init__</code>, <code class="text-cyan-300">self</code>, dan Method.</p>
+                                </button>
+
+                                <button type="button" onclick="window.app.selectSetupMode('MODE_C')" data-mode="MODE_C" class="setup-mode-btn text-left p-3.5 rounded-2xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-display font-bold text-sm text-white">Mode C: OOP Bug Hunter</span>
+                                        <span class="text-[11px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">200 Poin Maks</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Temukan error seperti lupa menulis parameter <code class="text-cyan-300">self</code>, salah tulis <code class="text-cyan-300">__init__</code>, atau akses atribut keliru.</p>
+                                </button>
+
+                                <button type="button" onclick="window.app.selectSetupMode('MODE_D')" data-mode="MODE_D" class="setup-mode-btn text-left p-3.5 rounded-2xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-display font-bold text-sm text-white">Mode D: Rakit Blueprint Class</span>
+                                        <span class="text-[11px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">200 Poin Maks</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Susun potongan baris kode <code class="text-cyan-300">class</code>, <code class="text-cyan-300">def __init__</code>, dan <code class="text-cyan-300">method</code> di layar PID atau HP.</p>
+                                </button>
+
+                                <button type="button" onclick="window.app.selectSetupMode('MODE_E')" data-mode="MODE_E" class="setup-mode-btn text-left p-3.5 rounded-2xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 transition">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-display font-bold text-sm text-yellow-300">🔥 Mode E: Boss Battle OOP</span>
+                                        <span class="text-[11px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300 font-mono">300 Poin Maks</span>
+                                    </div>
+                                    <p class="text-xs text-slate-400">Tantangan integrasi interaksi antar objek, perubahan nilai atribut lewat method, dan class attribute.</p>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">2. Pilih Fokus Materi OOP Dasar</label>
+                            <select id="setup-category" class="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm font-semibold text-white focus:outline-none focus:border-cyan-400">
+                                <option value="ALL">Semua Materi Dasar OOP (Class, Object, Atribut, __init__, self, Method)</option>
+                                <option value="Class & Object">1. Konsep Class (Blueprint) & Object (Instansiasi)</option>
+                                <option value="Atribut & Class Atribut">2. Instance Attribute vs Class Attribute</option>
+                                <option value="Constructor & self">3. Constructor (__init__) & Peran Parameter self</option>
+                                <option value="Method & Perilaku Objek">4. Method & Manipulasi Status Objek</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Right 5 Cols: Difficulty, Duration, Count, Leaderboard Mode -->
+                    <div class="lg:col-span-5 flex flex-col justify-between bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-5">
+                        <div class="space-y-4">
+                            <!-- Difficulty -->
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">3. Tingkat Kesulitan</label>
+                                <div class="grid grid-cols-4 gap-2" id="setup-diff-grid">
+                                    <button type="button" onclick="window.app.selectSetupDiff('BERTAHAP')" data-diff="BERTAHAP" class="setup-diff-btn py-2.5 px-2 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-cyan-200 text-xs font-bold">Bertahap</button>
+                                    <button type="button" onclick="window.app.selectSetupDiff('MUDAH')" data-diff="MUDAH" class="setup-diff-btn py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 text-xs font-bold">Mudah</button>
+                                    <button type="button" onclick="window.app.selectSetupDiff('SEDANG')" data-diff="SEDANG" class="setup-diff-btn py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 text-xs font-bold">Sedang</button>
+                                    <button type="button" onclick="window.app.selectSetupDiff('SULIT')" data-diff="SULIT" class="setup-diff-btn py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 text-xs font-bold">Sulit / HOTS</button>
+                                </div>
+                            </div>
+
+                            <!-- Duration & Question Count -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">4. Durasi per Soal</label>
+                                    <select id="setup-duration" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm font-bold text-white">
+                                        <option value="25">25 Detik (Cepat)</option>
+                                        <option value="35" selected>35 Detik (Standar)</option>
+                                        <option value="45">45 Detik (Analisis)</option>
+                                        <option value="60">60 Detik (Diskusi PID)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">5. Jumlah Soal</label>
+                                    <select id="setup-count" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm font-bold text-white">
+                                        <option value="6">6 Tantangan (Singkat)</option>
+                                        <option value="10" selected>10 Tantangan (Ideal)</option>
+                                        <option value="14">14 Tantangan (Semua Bank)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Scoring Mode: Team vs Individual -->
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">6. Mode Kompetisi & Interaksi PID</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button type="button" id="btn-comp-team" onclick="window.app.selectCompType('TEAM')" class="p-3 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-left transition">
+                                        <div class="flex items-center gap-2 font-bold text-sm text-cyan-200">
+                                            <i class="ph-fill ph-users-three text-lg"></i>
+                                            <span>Mode Tim & Sentuh PID</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-300 mt-1">Bisa dijawab lewat HP murid ATAU perwakilan tim maju menyentuh layar PID!</p>
+                                    </button>
+                                    <button type="button" id="btn-comp-indiv" onclick="window.app.selectCompType('INDIVIDUAL')" class="p-3 rounded-xl border border-slate-700 bg-slate-900 text-left transition">
+                                        <div class="flex items-center gap-2 font-bold text-sm text-slate-300">
+                                            <i class="ph-fill ph-user-focus text-lg"></i>
+                                            <span>Mode Individu</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 mt-1">Setiap murid bertanding mandiri maupun maju ke papan PID.</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800">
+                            <button id="btn-create-room-submit" onclick="window.app.createRoomOnServer()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-slate-950 font-display font-black text-base tracking-wider shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-2 transition">
+                                <i class="ph-bold ph-broadcast text-xl"></i>
+                                <span>BUKA RUANG & TAMPILKAN DASHBOARD PID</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: PID MAIN DASHBOARD (16:9 OPTIMIZED)-->
+        <!-- ========================================== -->
+        <section id="view-pid-dashboard" class="hidden flex-1 flex flex-col justify-between gap-4">
+            
+            <!-- TOP HUD INFORMATION PANEL -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-3 items-center bg-slate-900/95 neon-border-cyan rounded-2xl p-3.5 sm:px-6">
+                <!-- Room Code & Join Info -->
+                <div class="xl:col-span-4 flex flex-wrap items-center gap-3">
+                    <div class="bg-slate-950 border-2 border-cyan-400 rounded-2xl px-4 py-1.5 flex items-center gap-2.5">
+                        <div>
+                            <span class="block text-[10px] font-bold uppercase tracking-widest text-slate-400">KODE RUANG PID</span>
+                            <span id="pid-room-code" class="font-display font-black text-2xl sm:text-3xl tracking-widest text-yellow-300">OOP25</span>
+                        </div>
+                        <button onclick="window.app.copyRoomCode()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300" title="Salin Kode Ruang">
+                            <i class="ph-bold ph-copy text-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2.5">
+                        <div class="bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2">
+                            <span class="block text-[10px] font-bold uppercase text-slate-400">ARSITEK AKTIF</span>
+                            <div class="flex items-center gap-1.5">
+                                <i class="ph-fill ph-users text-cyan-400 text-lg"></i>
+                                <span id="pid-player-count" class="font-display font-black text-xl text-white">0</span>
+                                <span class="text-xs text-slate-400">Murid</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2">
+                            <span class="block text-[10px] font-bold uppercase text-slate-400">STATUS ARENA</span>
+                            <div class="flex items-center gap-1.5">
+                                <span id="pid-status-dot" class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                                <span id="pid-status-label" class="font-bold text-xs sm:text-sm text-yellow-300 uppercase">MENUNGGU</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Round & Category Info -->
+                <div class="xl:col-span-4 text-center border-y xl:border-y-0 xl:border-x border-slate-800 py-2 xl:py-0">
+                    <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-bold uppercase mb-1">
+                        <span id="pid-mode-badge">PETUALANGAN OOP</span>
+                        <span>•</span>
+                        <span id="pid-comp-badge">MODE TIM & SENTUH PID</span>
+                    </div>
+                    <h2 id="pid-category-title" class="font-display font-bold text-base sm:text-lg text-white truncate px-2">Menunggu Peserta atau Mulai Interaksi Sentuh PID...</h2>
+                </div>
+
+                <!-- Right Teacher Control Panel -->
+                <div class="xl:col-span-4 flex flex-wrap items-center justify-end gap-2">
+                    <button onclick="window.app.openPIDLabModal()" class="px-3 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-yellow-300 border border-amber-400/50 text-xs font-bold flex items-center gap-1.5 transition" title="Simulasi Visual Class & Object di PID">
+                        <i class="ph-fill ph-cube text-base"></i>
+                        <span class="hidden sm:inline">Visualisasi Objek</span>
+                    </button>
+
+                    <!-- Dynamic Teacher Action Buttons -->
+                    <button id="btn-pid-start" onclick="window.app.hostStartGame()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-500 hover:from-emerald-300 hover:to-cyan-400 text-slate-950 font-display font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition">
+                        <i class="ph-fill ph-play text-base"></i>
+                        <span>MULAI ARENA</span>
+                    </button>
+
+                    <button id="btn-pid-pause" onclick="window.app.hostTogglePause()" class="hidden px-3.5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs sm:text-sm items-center gap-1.5 transition">
+                        <i id="icon-pid-pause" class="ph-fill ph-pause text-base"></i>
+                        <span id="text-pid-pause">Jeda</span>
+                    </button>
+
+                    <button id="btn-pid-reveal" onclick="window.app.hostRevealRound()" class="hidden px-3.5 py-2.5 rounded-xl bg-purple-500/30 hover:bg-purple-500/40 text-purple-200 border border-purple-400/50 font-bold text-xs sm:text-sm items-center gap-1.5 transition">
+                        <i class="ph-bold ph-check-square-offset text-base"></i>
+                        <span>Tutup & Bahas</span>
+                    </button>
+
+                    <button id="btn-pid-next" onclick="window.app.hostNextQuestion()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-display font-black text-xs sm:text-sm items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition">
+                        <span>Soal Berikutnya</span>
+                        <i class="ph-bold ph-arrow-right text-base"></i>
+                    </button>
+
+                    <button id="btn-pid-finish" onclick="window.app.hostFinishGame()" class="hidden px-3.5 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 font-bold text-xs sm:text-sm items-center gap-1.5 transition">
+                        <i class="ph-bold ph-flag-checkered text-base"></i>
+                        <span>Evaluasi</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MAIN 16:9 WORKSPACE AREA -->
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+                
+                <!-- LEFT 8 COLUMNS: LOBBY OR ACTIVE QUESTION (WITH PID TOUCH!) OR EVALUATION -->
+                <div class="lg:col-span-8 flex flex-col">
+
+                    <!-- SUBVIEW A: PID WAITING LOBBY -->
+                    <div id="pid-subview-lobby" class="flex-1 rounded-3xl bg-slate-900/90 border border-slate-800 p-6 flex flex-col justify-between">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-auto">
+                            <!-- QR Code Box -->
+                            <div class="md:col-span-5 flex flex-col items-center text-center bg-slate-950/90 border-2 border-cyan-400/60 rounded-3xl p-5 shadow-xl">
+                                <span class="text-xs font-bold uppercase tracking-widest text-cyan-300 mb-2">PINDAI QR UNTUK GABUNG DARI HP</span>
+                                <div class="bg-white p-3 rounded-2xl shadow-inner mb-3">
+                                    <img id="pid-qr-img" src="https://placehold.co/220x220/ffffff/0f172a?text=QR+OOP" alt="QR Code Gabung" class="w-40 h-40 sm:w-48 sm:h-48 object-contain rounded-lg" onerror="this.src='https://placehold.co/220x220/ffffff/0f172a?text=KODE+RUANG'">
+                                </div>
+                                <p class="text-xs text-slate-400 mb-1">Kode Ruang Arena:</p>
+                                <div id="pid-lobby-big-code" class="font-display font-black text-3xl sm:text-4xl tracking-widest text-yellow-300 bg-slate-900 px-5 py-1.5 rounded-xl border border-yellow-400/40">OOP25</div>
+                            </div>
+
+                            <!-- Joined Players Grid & PID Direct Touch Ready -->
+                            <div class="md:col-span-7 flex flex-col justify-between h-full space-y-4">
+                                <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4">
+                                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                                        <h3 class="font-display font-bold text-base sm:text-lg text-white flex items-center gap-2">
+                                            <i class="ph-fill ph-users-four text-cyan-400"></i>
+                                            <span>Daftar Arsitek & Perwakilan Tim</span>
+                                        </h3>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="window.app.addSimulatedBotPlayers()" class="px-3 py-1 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 font-bold text-xs transition">
+                                                + Aktifkan 4 Skuad Tim di PID
+                                            </button>
+                                            <span id="pid-lobby-counter-badge" class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-bold text-xs">0 Siap</span>
+                                        </div>
+                                    </div>
+                                    <div id="pid-lobby-players-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-56 overflow-y-auto pr-1">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+
+                                <!-- PID Touch Mode Explanation Card -->
+                                <div class="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-amber-500/10 border border-cyan-400/40 rounded-2xl p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-yellow-400/20 border border-yellow-400/50 flex items-center justify-center text-yellow-300 shrink-0 mt-0.5">
+                                            <i class="ph-fill ph-hand-tap text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-display font-bold text-sm text-white">Mode Interaksi Langsung di Layar PID Aktif!</h4>
+                                            <p class="text-xs text-slate-300 leading-relaxed mt-1">
+                                                Selain murid menjawab lewat HP/laptop, Bapak/Ibu Guru dapat memanggil perwakilan **4 Tim Skuad (Class, Object, Init, Method)** untuk **maju menyentuh jawaban atau menyusun blok kode Python langsung di layar PID ini**!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SUBVIEW B: PID ACTIVE QUESTION & DIRECT TOUCH INTERACTION -->
+                    <div id="pid-subview-question" class="hidden flex-1 rounded-3xl bg-slate-900/95 border border-slate-800 p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden">
+                        
+                        <!-- Question Top Bar -->
+                        <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <span id="pid-q-number" class="px-4 py-1.5 rounded-xl bg-cyan-500/20 border border-cyan-400/50 font-display font-black text-base sm:text-lg text-cyan-300">SOAL 1 / 10</span>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span id="pid-q-mode" class="text-xs font-extrabold uppercase tracking-wider text-yellow-300">MODE A: TEBAK OUTPUT</span>
+                                        <span id="pid-q-diff" class="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300">MUDAH</span>
+                                    </div>
+                                    <p id="pid-q-topic" class="text-xs text-slate-400">Materi: Class & Object</p>
+                                </div>
+                            </div>
+
+                            <!-- Answered Counter & Big Timer -->
+                            <div class="flex items-center gap-4">
+                                <div class="text-right">
+                                    <span class="block text-[10px] font-bold uppercase text-slate-400">RESPON MASUK</span>
+                                    <span id="pid-answered-progress" class="font-display font-black text-lg sm:text-xl text-cyan-300">0 / 0</span>
+                                </div>
+                                <div id="pid-timer-box" class="flex items-center gap-2 px-5 py-2 rounded-2xl bg-slate-950 border-2 border-cyan-400 shadow-lg">
+                                    <i class="ph-bold ph-timer text-2xl text-cyan-400"></i>
+                                    <span id="pid-timer-text" class="font-display font-black text-3xl sm:text-4xl text-white">35</span>
+                                    <span class="text-xs font-bold text-slate-400">dtk</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timer Progress Bar -->
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden my-2.5">
+                            <div id="pid-timer-bar" class="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-yellow-400 transition-all duration-300" style="width: 100%;"></div>
+                        </div>
+
+                        <!-- PID DIRECT TOUCH TEAM SELECTOR BAR (Allows students at the PID board to tap for their team!) -->
+                        <div class="bg-slate-950/90 border border-cyan-500/40 rounded-2xl p-2.5 px-3.5 mb-3 flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 text-xs font-bold text-cyan-300">
+                                <i class="ph-fill ph-hand-tap text-yellow-300 text-lg"></i>
+                                <span>INTERAKSI SENTUH PID (Pilih Tim yang Maju ke Papan):</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-1.5" id="pid-board-team-selector">
+                                <button type="button" onclick="window.app.selectPIDBoardTeam('CLASS-ARCH')" data-bteam="CLASS-ARCH" class="pid-bteam-btn px-3 py-1.5 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-cyan-200 text-xs font-bold transition">📐 Tim Class</button>
+                                <button type="button" onclick="window.app.selectPIDBoardTeam('OBJ-FORGE')" data-bteam="OBJ-FORGE" class="pid-bteam-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-purple-300 text-xs font-bold transition">🤖 Tim Object</button>
+                                <button type="button" onclick="window.app.selectPIDBoardTeam('INIT-CORE')" data-bteam="INIT-CORE" class="pid-bteam-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-yellow-300 text-xs font-bold transition">⚙️ Tim Init</button>
+                                <button type="button" onclick="window.app.selectPIDBoardTeam('METHOD-X')" data-bteam="METHOD-X" class="pid-bteam-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-emerald-300 text-xs font-bold transition">⚡ Tim Method</button>
+                            </div>
+                        </div>
+
+                        <!-- Main Question Body + Visual OOP Blueprint Diagram -->
+                        <div class="my-auto space-y-3 py-1">
+                            <h3 id="pid-q-prompt" class="font-sans font-extrabold text-lg sm:text-2xl text-white leading-snug">
+                                Perhatikan kode Class Python berikut!
+                            </h3>
+
+                            <div class="grid grid-cols-1 xl:grid-cols-12 gap-3 items-stretch">
+                                <!-- Python Monospace Code Block (8 cols) -->
+                                <div class="xl:col-span-8 code-window rounded-2xl p-4 relative flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-800 text-xs text-slate-400 font-mono">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                                <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                                                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                                <span class="ml-2 text-cyan-300 font-bold">arsitek_oop.py</span>
+                                            </div>
+                                            <span>Python 3.12 • OOP Fase E</span>
+                                        </div>
+                                        <pre id="pid-q-code" class="font-mono text-sm sm:text-lg xl:text-xl text-cyan-200 leading-relaxed overflow-x-auto whitespace-pre"></pre>
+                                    </div>
+                                </div>
+
+                                <!-- Visual X-Ray Anatomy Card on PID (4 cols) -->
+                                <div class="xl:col-span-4 bg-slate-950/90 border border-slate-800 rounded-2xl p-3.5 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-purple-300 pb-2 mb-2 border-b border-slate-800">
+                                            <span><i class="ph-fill ph-scan text-cyan-400"></i> Anatomi Objek Visual</span>
+                                            <span id="pid-xray-badge" class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-200">Blueprint</span>
+                                        </div>
+                                        <div id="pid-visual-anatomy" class="space-y-2 text-xs">
+                                            <!-- Dynamically populated visual representation of Class/Object/Self -->
+                                        </div>
+                                    </div>
+                                    <div class="pt-2 mt-2 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+                                        <span>Sentuh opsi di bawah untuk menjawab di PID</span>
+                                        <i class="ph-bold ph-hand-pointing text-yellow-300 text-sm"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PID Interactive Answer Area: Supports both Touch MCQ and Touch Code Ordering directly on PID! -->
+                            <div id="pid-q-options" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                                <!-- Populated dynamically with touchable buttons -->
+                            </div>
+
+                            <!-- PID Direct Touch Code Ordering Area (Shown on PID when Mode D is active!) -->
+                            <div id="pid-order-area" class="hidden pt-2 space-y-3">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-slate-950 border border-slate-700 rounded-2xl p-3">
+                                        <span class="block text-xs font-bold uppercase text-purple-300 mb-2">1. Sentuh Baris Kode untuk Merakit Class:</span>
+                                        <div id="pid-order-pool" class="space-y-2"></div>
+                                    </div>
+                                    <div class="bg-slate-950 border-2 border-cyan-500/50 rounded-2xl p-3 flex flex-col justify-between">
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-xs font-bold uppercase text-cyan-300">2. Hasil Rakitan di Papan PID:</span>
+                                                <button type="button" onclick="window.app.resetPIDCodeOrder()" class="text-xs text-rose-400 font-bold hover:underline">Reset Rakitan</button>
+                                            </div>
+                                            <div id="pid-order-selected" class="space-y-1.5 font-mono text-xs sm:text-sm min-h-[110px]"></div>
+                                        </div>
+                                        <button type="button" onclick="window.app.submitPIDCodeOrder()" class="mt-3 w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-display font-black text-xs sm:text-sm tracking-wide shadow-lg">
+                                            KUNCI RAKITAN KODE DI PID
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROUND REVEAL & DISCUSSION PANEL -->
+                        <div id="pid-round-reveal-box" class="hidden mt-3 rounded-2xl bg-slate-950/95 neon-border-yellow p-4 transition-all">
+                            <div class="flex flex-wrap items-center justify-between gap-4 mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-emerald-300">
+                                        <i class="ph-bold ph-check-fat text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-bold uppercase tracking-wider text-yellow-300">KUNCI JAWABAN & KONSEP OOP</span>
+                                        <h4 id="pid-reveal-correct-answer" class="font-display font-black text-lg sm:text-xl text-emerald-400">Jawaban Benar: B</h4>
+                                    </div>
+                                </div>
+                                <div class="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold">
+                                    Akurasi Kelas: <span id="pid-reveal-accuracy" class="text-cyan-300 font-display">0%</span> (<span id="pid-reveal-counts">0/0 Benar</span>)
+                                </div>
+                            </div>
+                            <p id="pid-reveal-explanation" class="text-sm sm:text-base text-slate-200 leading-relaxed bg-slate-900/90 p-3.5 rounded-xl border border-slate-800"></p>
+                        </div>
+                    </div>
+
+                    <!-- SUBVIEW C: PID FINAL LEARNING EVALUATION REPORT -->
+                    <div id="pid-subview-evaluation" class="hidden flex-1 rounded-3xl bg-slate-900/95 neon-border-yellow p-6 flex flex-col justify-between overflow-y-auto">
+                        <div>
+                            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-6">
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-widest text-yellow-300">Laporan Hasil Evaluasi Pembelajaran OOP Python (Kelas X Fase E)</span>
+                                    <h2 class="font-display font-black text-2xl sm:text-4xl text-white mt-1">🏆 PENGUMUMAN ARSITEK TERBAIK & REFLEKSI</h2>
+                                </div>
+                                <button onclick="window.app.openHostSetup()" class="px-4 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-display font-bold text-xs sm:text-sm flex items-center gap-2">
+                                    <i class="ph-bold ph-arrows-clockwise"></i> Sesi Permainan Baru
+                                </button>
+                            </div>
+
+                            <!-- Winner Podium Banner -->
+                            <div id="eval-winner-banner" class="rounded-2xl bg-gradient-to-r from-yellow-500/20 via-purple-500/20 to-cyan-500/20 border-2 border-yellow-400/60 p-5 mb-6 text-center"></div>
+
+                            <!-- Key Metrics Summary -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mb-6">
+                                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+                                    <span class="text-xs text-slate-400 uppercase font-bold">Total Peserta/Tim</span>
+                                    <div id="eval-stat-players" class="font-display font-black text-2xl sm:text-3xl text-cyan-300 mt-1">0</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+                                    <span class="text-xs text-slate-400 uppercase font-bold">Rata-rata Akurasi OOP</span>
+                                    <div id="eval-stat-accuracy" class="font-display font-black text-2xl sm:text-3xl text-emerald-400 mt-1">0%</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+                                    <span class="text-xs text-slate-400 uppercase font-bold">Total Tantangan</span>
+                                    <div id="eval-stat-questions" class="font-display font-black text-2xl sm:text-3xl text-purple-300 mt-1">0 Soal</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+                                    <span class="text-xs text-slate-400 uppercase font-bold">Skor Tertinggi</span>
+                                    <div id="eval-stat-topscore" class="font-display font-black text-2xl sm:text-3xl text-yellow-300 mt-1">0 Poin</div>
+                                </div>
+                            </div>
+
+                            <!-- Category Mastery & Hardest Questions -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4">
+                                    <h3 class="font-display font-bold text-sm sm:text-base text-cyan-300 mb-3 flex items-center gap-2">
+                                        <i class="ph-fill ph-chart-bar"></i>
+                                        <span>Penguasaan 7 Konsep Dasar OOP</span>
+                                    </h3>
+                                    <div id="eval-category-breakdown" class="space-y-3"></div>
+                                </div>
+
+                                <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-display font-bold text-sm sm:text-base text-rose-300 mb-3 flex items-center gap-2">
+                                            <i class="ph-fill ph-warning-octagon"></i>
+                                            <span>Konsep yang Perlu Penguatan & Rekomendasi</span>
+                                        </h3>
+                                        <div id="eval-hardest-questions" class="space-y-2.5 mb-4"></div>
+                                    </div>
+                                    <div id="eval-teacher-recommendation" class="p-3.5 rounded-xl bg-purple-500/15 border border-purple-500/40 text-xs sm:text-sm text-purple-200 leading-relaxed"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT 4 COLUMNS: REAL-TIME LEADERBOARD -->
+                <div class="lg:col-span-4 flex flex-col rounded-3xl bg-slate-900/95 border border-slate-800 p-5 justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <i class="ph-fill ph-ranking text-2xl text-yellow-400"></i>
+                                <div>
+                                    <h3 class="font-display font-bold text-base sm:text-lg text-white">KLASEMEN REAL-TIME</h3>
+                                    <p class="text-[11px] text-slate-400">Skor Sentuh PID & Perangkat Murid</p>
+                                </div>
+                            </div>
+                            <button onclick="window.app.openFullLeaderboardModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold border border-slate-700 transition">
+                                Semua Peringkat
+                            </button>
+                        </div>
+
+                        <!-- TEAM STANDINGS SECTION -->
+                        <div id="pid-team-leaderboard-section" class="mb-5">
+                            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-cyan-300 mb-2">
+                                <span>Skor Skuad Tim OOP</span>
+                                <span>Total Poin</span>
+                            </div>
+                            <div id="pid-team-standings-list" class="space-y-2"></div>
+                        </div>
+
+                        <!-- TOP 10 INDIVIDUAL PLAYERS -->
+                        <div>
+                            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-purple-300 mb-2">
+                                <span>Top 10 Arsitek Terbaik</span>
+                                <span>Skor & Akurasi</span>
+                            </div>
+                            <div id="pid-individual-standings-list" class="space-y-2 max-h-[360px] overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                        <span>Sinkronisasi: <strong class="text-emerald-400">PID Touch + Cloud Aktif</strong></span>
+                        <span id="pid-round-bonus-toast" class="text-yellow-300 font-bold"></span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: STUDENT INTERFACE (HP / LAPTOP)    -->
+        <!-- ========================================== -->
+        <section id="view-student-client" class="hidden my-auto py-2">
+            <div class="max-w-xl mx-auto rounded-3xl bg-slate-900/95 neon-border-purple p-5 sm:p-6 flex flex-col justify-between min-h-[540px]">
+                
+                <!-- Student Top Status Header -->
+                <div class="flex items-center justify-between gap-2 pb-4 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-400/50 flex items-center justify-center font-display font-black text-purple-300" id="student-avatar-badge">
+                            OOP
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span id="student-hud-name" class="font-bold text-base text-white">Murid</span>
+                                <span id="student-hud-team" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">📐 Class</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-slate-400">
+                                <span>Ruang: <strong id="student-hud-room" class="text-yellow-300 font-mono">OOP25</strong></span>
+                                <span>•</span>
+                                <span class="text-emerald-400">Terhubung</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right bg-slate-950 border border-slate-800 px-3.5 py-2 rounded-2xl">
+                        <span class="block text-[10px] font-bold uppercase text-slate-400">SKOR PRIBADI</span>
+                        <span id="student-hud-score" class="font-display font-black text-xl text-yellow-300">0</span>
+                    </div>
+                </div>
+
+                <!-- STUDENT STATE 1: WAITING -->
+                <div id="student-state-waiting" class="my-auto text-center py-8 space-y-4">
+                    <div class="w-20 h-20 rounded-3xl bg-cyan-500/15 border-2 border-cyan-400/50 flex items-center justify-center mx-auto text-cyan-300 animate-bounce">
+                        <i class="ph-duotone ph-cube-transparent text-4xl"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl text-white">Siap Merakit Objek Python!</h3>
+                    <p class="text-sm text-slate-300 max-w-md mx-auto">
+                        Perhatikan layar <strong class="text-cyan-300">Panel Interaktif Digital (PID)</strong> di depan kelas. Soal akan muncul otomatis begitu Guru menekan tombol <strong class="text-yellow-300">Mulai Arena</strong>.
+                    </p>
+                </div>
+
+                <!-- STUDENT STATE 2: ACTIVE QUESTION -->
+                <div id="student-state-question" class="hidden my-auto py-3 space-y-4">
+                    <div class="flex items-center justify-between bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                        <div>
+                            <span id="student-q-num" class="text-xs font-display font-bold text-cyan-300 uppercase">SOAL 1 / 10</span>
+                            <span id="student-q-mode-badge" class="block text-[11px] text-yellow-300 font-bold">Mode A: Tebak Output</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900 border border-cyan-400/50">
+                            <i class="ph-bold ph-timer text-cyan-400 text-lg"></i>
+                            <span id="student-q-timer" class="font-display font-black text-xl text-white">35</span>
+                            <span class="text-xs text-slate-400">dtk</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p id="student-q-prompt" class="font-bold text-base sm:text-lg text-white leading-snug"></p>
+                        <div class="code-window rounded-2xl p-3.5">
+                            <pre id="student-q-code" class="font-mono text-xs sm:text-sm text-cyan-200 overflow-x-auto whitespace-pre leading-relaxed"></pre>
+                        </div>
+                    </div>
+
+                    <!-- MULTIPLE CHOICE AREA -->
+                    <div id="student-mcq-area" class="grid grid-cols-1 gap-2.5 pt-1"></div>
+
+                    <!-- CODE ORDERING AREA -->
+                    <div id="student-order-area" class="hidden space-y-3 pt-1">
+                        <p class="text-xs text-cyan-300 font-semibold">Ketuk potongan baris kode di bawah secara berurutan untuk menyusun Class Python yang benar:</p>
+                        <div class="bg-slate-950 border border-cyan-500/40 rounded-2xl p-3 min-h-[90px]">
+                            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+                                <span>Susunan Class-mu:</span>
+                                <button type="button" onclick="window.app.resetStudentCodeOrder()" class="text-rose-400 hover:underline font-bold">Ulangi Susunan</button>
+                            </div>
+                            <div id="student-order-selected" class="space-y-1.5 font-mono text-xs"></div>
+                        </div>
+                        <div id="student-order-pool" class="space-y-2"></div>
+                        <button type="button" onclick="window.app.submitStudentCodeOrder()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-display font-black text-sm tracking-wide shadow-lg">
+                            KIRIM SUSUNAN CLASS FINAL
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STUDENT STATE 3: SUBMITTED -->
+                <div id="student-state-submitted" class="hidden my-auto text-center py-8 space-y-4">
+                    <div class="w-20 h-20 rounded-3xl bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto text-emerald-300">
+                        <i class="ph-bold ph-paper-plane-tilt text-4xl"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl text-white">Jawaban Terkunci!</h3>
+                    <p class="text-sm text-slate-300 max-w-sm mx-auto">
+                        Jawabanmu telah diterima pusat kendali PID. Perhatikan pembahasan visual objek di layar depan kelas!
+                    </p>
+                </div>
+
+                <!-- STUDENT STATE 4: REVEALED -->
+                <div id="student-state-revealed" class="hidden my-auto text-center py-6 space-y-4">
+                    <div id="student-reveal-icon" class="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl"></div>
+                    <h3 id="student-reveal-title" class="font-display font-black text-2xl"></h3>
+                    <p id="student-reveal-points" class="font-display font-bold text-lg text-yellow-300"></p>
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-left space-y-2">
+                        <div id="student-reveal-correct" class="text-xs font-bold text-emerald-400 uppercase"></div>
+                        <p id="student-reveal-explanation" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- STUDENT STATE 5: FINISHED -->
+                <div id="student-state-finished" class="hidden my-auto text-center py-6 space-y-4">
+                    <div class="w-20 h-20 rounded-3xl bg-yellow-400/20 border-2 border-yellow-400 flex items-center justify-center mx-auto text-yellow-300">
+                        <i class="ph-fill ph-trophy text-4xl"></i>
+                    </div>
+                    <h3 class="font-display font-black text-2xl text-white">Arena OOP Selesai!</h3>
+                    <div class="grid grid-cols-3 gap-2.5 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                        <div>
+                            <span class="block text-[10px] text-slate-400 uppercase">Peringkatmu</span>
+                            <span id="student-final-rank" class="font-display font-black text-xl text-cyan-300">#1</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-400 uppercase">Total Skor</span>
+                            <span id="student-final-score" class="font-display font-black text-xl text-yellow-300">0</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-400 uppercase">Akurasi</span>
+                            <span id="student-final-acc" class="font-display font-black text-xl text-emerald-400">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                    <span id="student-accuracy-footer">Benar: 0 Soal</span>
+                    <span id="student-rank-footer" class="font-bold text-cyan-300">Peringkat: -</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 0: PID INTERACTIVE OOP LAB (DIRECT TOUCH SIMULATOR FOR CLASSROOM TEACHING) -->
+    <div id="modal-pid-lab" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3 sm:p-6">
+        <div class="bg-slate-900 neon-border-cyan rounded-3xl max-w-6xl w-full max-h-[92vh] flex flex-col p-5 sm:p-6 overflow-y-auto">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-yellow-400/20 border border-yellow-400 flex items-center justify-center text-yellow-300">
+                        <i class="ph-fill ph-hand-tap text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-cyan-300">Laboratorium Sentuh Interaktif PID • Demonstrasi Guru & Murid</span>
+                        <h3 class="font-display font-black text-xl sm:text-2xl text-white">PABRIK VISUAL CLASS & OBJECT PYTHON</h3>
+                    </div>
+                </div>
+                <button onclick="window.app.closePIDLabModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center gap-1.5">
+                    <i class="ph-bold ph-x text-base"></i> Tutup Lab PID
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Left 5 Cols: Class Blueprint & Constructor Touch Controls -->
+                <div class="lg:col-span-5 bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-300">1. Blueprint <code class="font-mono">class Robot:</code></span>
+                            <span class="text-[11px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">Cetakan Objek</span>
+                        </div>
+                        <div class="code-window rounded-xl p-3 font-mono text-xs sm:text-sm text-cyan-200 leading-relaxed mb-4">
+<span class="text-purple-400">class</span> <span class="text-yellow-300">Robot</span>:
+    <span class="text-slate-400"># Class Attribute (Milik Bersama)</span>
+    pabrik = <span id="lab-code-class-attr" class="text-emerald-300">"CyberNusantara"</span>
+
+    <span class="text-slate-400"># Constructor (__init__)</span>
+    <span class="text-purple-400">def</span> <span class="text-cyan-300">__init__</span>(<span class="text-rose-400">self</span>, nama, tipe, energi):
+        <span class="text-rose-400">self</span>.nama = nama
+        <span class="text-rose-400">self</span>.tipe = tipe
+        <span class="text-rose-400">self</span>.energi = energi
+
+    <span class="text-slate-400"># Method (Perilaku Objek)</span>
+    <span class="text-purple-400">def</span> <span class="text-cyan-300">isi_daya</span>(<span class="text-rose-400">self</span>):
+        <span class="text-rose-400">self</span>.energi += <span class="text-amber-300">20</span>
+                        </div>
+
+                        <!-- Touch controls to instantiate an Object -->
+                        <div class="space-y-3 bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
+                            <span class="block text-xs font-bold uppercase text-yellow-300">2. Sentuh Parameter untuk Cetak Object Baru (<code class="font-mono">__init__</code>):</span>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Argumen <code class="text-white">nama</code></label>
+                                    <select id="lab-input-nama" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-2 text-xs font-bold text-white">
+                                        <option value="GatotBot">GatotBot</option>
+                                        <option value="GarudaX">GarudaX</option>
+                                        <option value="SrikandiAI">SrikandiAI</option>
+                                        <option value="BimaCyber">BimaCyber</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Argumen <code class="text-white">tipe</code></label>
+                                    <select id="lab-input-tipe" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-2 text-xs font-bold text-cyan-300">
+                                        <option value="Penjaga">🛡️ Penjaga</option>
+                                        <option value="Penjelajah">🚀 Penjelajah</option>
+                                        <option value="Medis">⚡ Medis</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 mb-1">Argumen <code class="text-white">energi</code></label>
+                                    <select id="lab-input-energi" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-2 text-xs font-bold text-emerald-300">
+                                        <option value="80">80</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="window.app.labInstantiateObject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-display font-black text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2 active:scale-95 transition">
+                                <i class="ph-bold ph-plus-circle text-lg"></i>
+                                <span>INSTANSIASI OBJECT: robot_baru = Robot(...)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Change Class Attribute Button -->
+                    <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3 flex items-center justify-between gap-2">
+                        <div>
+                            <span class="block text-xs font-bold text-purple-300">Ubah Class Attribute (<code class="font-mono">Robot.pabrik</code>)</span>
+                            <span class="text-[11px] text-slate-400">Lihat efeknya pada seluruh objek yang sudah dibuat!</span>
+                        </div>
+                        <button onclick="window.app.labToggleClassAttribute()" class="px-3 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold text-xs shrink-0">
+                            Ubah Robot.pabrik
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right 7 Cols: Live Object Instances Memory Arena -->
+                <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-yellow-300">3. Memori Instansiasi Object (Sentuh Method pada Tiap Objek!)</span>
+                                <p class="text-xs text-slate-400">Setiap kartu di bawah adalah <strong>Object (Instance)</strong> mandiri dengan <code class="text-rose-300">self</code> masing-masing.</p>
+                            </div>
+                            <button onclick="window.app.labResetObjects()" class="text-xs text-rose-400 hover:underline font-bold">Bersihkan Objek</button>
+                        </div>
+
+                        <div id="lab-objects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-[340px] overflow-y-auto pr-1">
+                            <!-- Dynamically populated Robot Object cards -->
+                        </div>
+                    </div>
+
+                    <!-- Live Python Console Log -->
+                    <div class="mt-4 pt-3 border-t border-slate-800">
+                        <span class="block text-[11px] font-mono uppercase text-slate-400 mb-1.5">Log Eksekusi Interaktif Python (Real-Time):</span>
+                        <div id="lab-console-output" class="code-window rounded-xl p-3 font-mono text-xs text-emerald-300 h-24 overflow-y-auto space-y-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: FULL LEADERBOARD -->
+    <div id="modal-full-leaderboard" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="bg-slate-900 neon-border-cyan rounded-3xl max-w-3xl w-full max-h-[85vh] flex flex-col p-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2.5">
+                    <i class="ph-fill ph-trophy text-2xl text-yellow-400"></i>
+                    <h3 class="font-display font-bold text-xl text-white">Klasemen Lengkap Seluruh Arsitek</h3>
+                </div>
+                <button onclick="window.app.closeFullLeaderboardModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+            <div id="modal-leaderboard-content" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CUSTOM CONFIRMATION -->
+    <div id="modal-confirm" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center mx-auto text-amber-300">
+                <i class="ph-bold ph-warning text-2xl"></i>
+            </div>
+            <h4 id="modal-confirm-title" class="font-display font-bold text-lg text-white">Konfirmasi</h4>
+            <p id="modal-confirm-msg" class="text-sm text-slate-300"></p>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button onclick="window.app.closeConfirmModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">Batal</button>
+                <button id="modal-confirm-yes" class="px-5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-bold">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-box" class="fixed bottom-5 right-5 z-50 hidden items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900 neon-border-cyan text-sm font-semibold text-white shadow-2xl">
+        <i id="toast-icon" class="ph-fill ph-info text-cyan-400 text-xl"></i>
+        <span id="toast-text">Pesan Sistem</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const QUESTION_BANK = [
+            // 1. Konsep Dasar Class & Object
+            {
+                id: "OOP01",
+                mode: "MODE_B",
+                modeLabel: "Mode B: Bedah Konsep OOP",
+                category: "Class & Object",
+                topicDetail: "1. Konsep Class (Blueprint) & Object (Instance)",
+                difficulty: "MUDAH",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "MobilListrik",
+                    instances: "m1, m2 (Objek Nyata)",
+                    attrs: "merk, baterai",
+                    methods: "jalan()"
+                },
+                prompt: "Perhatikan kode berikut! Pada baris manakah proses pembuatan OBJECT (instansiasi) dari sebuah Class terjadi?",
+                code: `class MobilListrik:          # Baris 1\n    roda = 4                 # Baris 2\n\nm1 = MobilListrik()          # Baris 3\nprint(m1.roda)               # Baris 4`,
+                options: [
+                    "A. Baris 1 (class MobilListrik:)",
+                    "B. Baris 2 (roda = 4)",
+                    "C. Baris 3 (m1 = MobilListrik())",
+                    "D. Baris 4 (print(m1.roda))"
+                ],
+                correctIndex: 2,
+                explanation: "Baris 1 mendefinisikan Class (cetakan/blueprint). Sedangkan Baris 3 `m1 = MobilListrik()` adalah proses instansiasi, yaitu mencetak objek nyata `m1` dari class `MobilListrik`."
+            },
+            // 2. Constructor __init__
+            {
+                id: "OOP02",
+                mode: "MODE_B",
+                modeLabel: "Mode B: Bedah Konsep OOP",
+                category: "Constructor & self",
+                topicDetail: "3. Fungsi Constructor __init__ pada Class",
+                difficulty: "MUDAH",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "Hero",
+                    instances: "h1 = Hero('Arjuna')",
+                    attrs: "self.nama (Instance Attr)",
+                    methods: "__init__ (Constructor)"
+                },
+                prompt: "Apa fungsi utama dari method khusus `__init__` (Constructor) di dalam sebuah Class Python?",
+                code: `class Hero:\n    def __init__(self, nama, level):\n        self.nama = nama\n        self.level = level\n\nh1 = Hero("Arjuna", 10)`,
+                options: [
+                    "A. Menghapus objek dari memori saat program selesai",
+                    "B. Otomatis dijalankan saat objek baru dibuat untuk mengisi atribut awal objek",
+                    "C. Mengulang pembuatan objek sebanyak 10 kali",
+                    "D. Menyembunyikan class agar tidak bisa diakses"
+                ],
+                correctIndex: 1,
+                explanation: "Method `__init__` adalah Constructor di Python yang otomatis dipanggil begitu objek baru dibuat (`Hero('Arjuna', 10)`) untuk menginisialisasi atribut awal milik objek tersebut."
+            },
+            // 3. Tebak Output: Instance Attribute
+            {
+                id: "OOP03",
+                mode: "MODE_A",
+                modeLabel: "Mode A: Tebak Output Objek",
+                category: "Atribut & Class Atribut",
+                topicDetail: "2. Mengakses Instance Attribute pada Objek",
+                difficulty: "MUDAH",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "Siswa",
+                    instances: "s1 ('Budi'), s2 ('Siti')",
+                    attrs: "self.nama, self.kelas",
+                    methods: "__init__"
+                },
+                prompt: "Apa output yang tampil di layar dari eksekusi kode objek berikut?",
+                code: `class Siswa:\n    def __init__(self, nama, kelas):\n        self.nama = nama\n        self.kelas = kelas\n\ns1 = Siswa("Budi", "X-1")\ns2 = Siswa("Siti", "X-2")\nprint(s2.nama, s1.kelas)`,
+                options: [
+                    "A. Budi X-1",
+                    "B. Siti X-2",
+                    "C. Siti X-1",
+                    "D. Budi X-2"
+                ],
+                correctIndex: 2,
+                explanation: "`s2.nama` mengakses atribut `nama` milik objek `s2` yaitu 'Siti', sedangkan `s1.kelas` mengakses atribut `kelas` milik objek `s1` yaitu 'X-1'. Maka hasilnya: Siti X-1."
+            },
+            // 4. Perbedaan Class Attribute vs Instance Attribute
+            {
+                id: "OOP04",
+                mode: "MODE_B",
+                modeLabel: "Mode B: Bedah Konsep OOP",
+                category: "Atribut & Class Atribut",
+                topicDetail: "2. Membedakan Class Attribute & Instance Attribute",
+                difficulty: "SEDANG",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "Drone",
+                    instances: "Class Attr: tipe_baling",
+                    attrs: "Instance Attr: self.id_unit",
+                    methods: "__init__"
+                },
+                prompt: "Perhatikan kode berikut! Manakah yang merupakan CLASS ATTRIBUTE dan manakah yang merupakan INSTANCE ATTRIBUTE?",
+                code: `class Drone:\n    jumlah_baling = 4\n\n    def __init__(self, seri):\n        self.seri = seri`,
+                options: [
+                    "A. jumlah_baling adalah Instance Attribute; self.seri adalah Class Attribute",
+                    "B. jumlah_baling adalah Class Attribute; self.seri adalah Instance Attribute",
+                    "C. Keduanya adalah Class Attribute",
+                    "D. Keduanya adalah Method"
+                ],
+                correctIndex: 1,
+                explanation: "`jumlah_baling = 4` didefinisikan langsung di dalam class (di luar `__init__`) sehingga menjadi Class Attribute yang dimiliki bersama oleh semua objek Drone. Sedangkan `self.seri` melekat pada masing-masing objek (Instance Attribute)."
+            },
+            // 5. Peran Parameter self
+            {
+                id: "OOP05",
+                mode: "MODE_B",
+                modeLabel: "Mode B: Bedah Konsep OOP",
+                category: "Constructor & self",
+                topicDetail: "3. Memahami peran kata kunci `self`",
+                difficulty: "SEDANG",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "AkunGame",
+                    instances: "pemain1.sapa() -> self = pemain1",
+                    attrs: "self.username",
+                    methods: "sapa(self)"
+                },
+                prompt: "Mengapa setiap method di dalam class Python menggunakan parameter pertama `self`?",
+                code: `class AkunGame:\n    def __init__(self, username):\n        self.username = username\n\n    def info(self):\n        print("Halo", self.username)\n\npemain1 = AkunGame("CyberKnight")\npemain1.info()`,
+                options: [
+                    "A. Agar program berjalan lebih cepat di komputer",
+                    "B. `self` merujuk pada objek itu sendiri yang sedang memanggil method (`pemain1`), sehingga bisa mengakses atribut miliknya",
+                    "C. `self` adalah variabel global untuk seluruh class di Python",
+                    "D. Untuk mengubah nama class secara otomatis"
+                ],
+                correctIndex: 1,
+                explanation: "Parameter `self` mewakili instansi objek yang sedang dipanggil (dalam hal ini `pemain1`). Dengan `self.username`, Python tahu bahwa yang diambil adalah `username` milik `pemain1`."
+            },
+            // 6. Mode C: Bug Hunter (Lupa parameter self pada Method)
+            {
+                id: "OOP06",
+                mode: "MODE_C",
+                modeLabel: "Mode C: OOP Bug Hunter",
+                category: "Constructor & self",
+                topicDetail: "3. Debugging kesalahan parameter `self`",
+                difficulty: "SEDANG",
+                maxBasePoints: 150,
+                anatomy: {
+                    className: "Kucing",
+                    instances: "k1 = Kucing('Milo')",
+                    attrs: "self.nama",
+                    methods: "suara() -> Kurang self!"
+                },
+                prompt: "BUG HUNTER: Saat `k1.suara()` dijalankan, muncul pesan TypeError. Apa penyebab kesalahan pada kode di bawah ini?",
+                code: `class Kucing:\n    def __init__(self, nama):\n        self.nama = nama\n\n    def suara():             # <-- Perhatikan baris ini\n        print("Meong!")\n\nk1 = Kucing("Milo")\nk1.suara()`,
+                options: [
+                    "A. Nama class `Kucing` tidak boleh memakai huruf kapital",
+                    "B. Method `def suara():` lupa menyertakan parameter `self` di dalam tanda kurung menjadi `def suara(self):`",
+                    "C. Pemanggilan `k1 = Kucing('Milo')` seharusnya `k1 = __init__('Milo')`",
+                    "D. Fungsi `print('Meong!')` tidak boleh berada di dalam method"
+                ],
+                correctIndex: 1,
+                explanation: "Saat `k1.suara()` dipanggil, Python otomatis mengirimkan objek `k1` sebagai argumen pertama. Karena `def suara():` tidak memiliki parameter `self`, Python menolak argumen tersebut."
+            },
+            // 7. Mode A: Tebak Output Method & Perubahan Atribut
+            {
+                id: "OOP07",
+                mode: "MODE_A",
+                modeLabel: "Mode A: Tebak Output Objek",
+                category: "Method & Perilaku Objek",
+                topicDetail: "4. Method yang mengubah nilai atribut objek",
+                difficulty: "SEDANG",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "Baterai",
+                    instances: "b = Baterai(60)",
+                    attrs: "self.daya",
+                    methods: "pakai(25), cas(15)"
+                },
+                prompt: "Berapakah output angka yang dicetak oleh `print(b.daya)` di akhir program berikut?",
+                code: `class Baterai:\n    def __init__(self, daya):\n        self.daya = daya\n\n    def pakai(self, beban):\n        self.daya -= beban\n\n    def cas(self, tambah):\n        self.daya += tambah\n\nb = Baterai(60)\nb.pakai(25)\nb.cas(15)\nprint(b.daya)`,
+                options: [
+                    "A. 60",
+                    "B. 35",
+                    "C. 50",
+                    "D. 100"
+                ],
+                correctIndex: 2,
+                explanation: "Daya awal `b` adalah 60. Method `b.pakai(25)` mengurangi daya menjadi 60 - 25 = 35. Kemudian `b.cas(15)` menambah daya menjadi 35 + 15 = 50."
+            },
+            // 8. Mode C: Bug Hunter (Salah penulisan __init__)
+            {
+                id: "OOP08",
+                mode: "MODE_C",
+                modeLabel: "Mode C: OOP Bug Hunter",
+                category: "Constructor & self",
+                topicDetail: "3. Debugging penulisan Constructor `__init__`",
+                difficulty: "SEDANG",
+                maxBasePoints: 150,
+                anatomy: {
+                    className: "Laptop",
+                    instances: "lp = Laptop('Asus')",
+                    attrs: "self.merk",
+                    methods: "_init_ (Salah garis bawah!)"
+                },
+                prompt: "BUG HUNTER: Dika ingin membuat class `Laptop` dengan constructor, tetapi kode `lp = Laptop('Asus')` mengalami error. Apa penyebabnya?",
+                code: `class Laptop:\n    def _init_(self, merk):  # Baris 2\n        self.merk = merk     # Baris 3\n\nlp = Laptop("Asus")          # Error: Laptop() takes no arguments`,
+                options: [
+                    "A. Baris 2 salah ketik: constructor wajib menggunakan DUA garis bawah (underscore) di kiri dan kanan menjadi `def __init__(self, merk):`",
+                    "B. Baris 3 seharusnya ditulis `merk = self.merk`",
+                    "C. Kata `class` harus ditulis dengan huruf besar `CLASS`",
+                    "D. Objek `lp` harus dibuat di dalam blok class"
+                ],
+                correctIndex: 0,
+                explanation: "Constructor di Python adalah dunder method (double underscore) sehingga wajib ditulis dengan 2 underscore di awal dan 2 di akhir: `__init__`. Jika hanya satu `_init_`, Python menganggapnya method biasa."
+            },
+            // 9. Mode D: Rakit Blueprint Class (Susun Kode)
+            {
+                id: "OOP09",
+                mode: "MODE_D",
+                modeLabel: "Mode D: Rakit Blueprint Class",
+                category: "Class & Object",
+                topicDetail: "1 & 3. Merakit struktur Class, Constructor, dan Instansiasi",
+                difficulty: "SEDANG",
+                maxBasePoints: 150,
+                anatomy: {
+                    className: "Buku",
+                    instances: "b1 = Buku('Python')",
+                    attrs: "self.judul",
+                    methods: "__init__(self, judul)"
+                },
+                prompt: "RAKIT CLASS: Urutkan 4 baris kode berikut (bisa disentuh langsung di layar PID atau HP) agar menjadi program Class `Buku` yang valid!",
+                code: `# Potongan Baris Kode:\n[1]         self.judul = judul\n[2] class Buku:\n[3] b1 = Buku("Python Dasar")\n[4]     def __init__(self, judul):`,
+                codeBlocks: [
+                    { id: "1", text: "        self.judul = judul" },
+                    { id: "2", text: "class Buku:" },
+                    { id: "3", text: "b1 = Buku(\"Python Dasar\")" },
+                    { id: "4", text: "    def __init__(self, judul):" }
+                ],
+                correctOrder: ["2", "4", "1", "3"],
+                options: [
+                    "A. [2] -> [4] -> [1] -> [3]",
+                    "B. [2] -> [1] -> [4] -> [3]",
+                    "C. [4] -> [2] -> [1] -> [3]",
+                    "D. [3] -> [2] -> [4] -> [1]"
+                ],
+                correctIndex: 0,
+                explanation: "Dimulai dari deklarasi `class Buku:` [2], lalu definisi constructor `def __init__(self, judul):` [4], pengisian atribut `self.judul = judul` [1], dan pembuatan objek di luar class `b1 = Buku('Python Dasar')` [3]."
+            },
+            // 10. Mode A: Class Attribute yang Diubah
+            {
+                id: "OOP10",
+                mode: "MODE_A",
+                modeLabel: "Mode A: Tebak Output Objek",
+                category: "Atribut & Class Atribut",
+                topicDetail: "2. Perubahan nilai Class Attribute",
+                difficulty: "SULIT",
+                maxBasePoints: 100,
+                anatomy: {
+                    className: "ServerSekolah",
+                    instances: "sv1, sv2",
+                    attrs: "Class Attr: status",
+                    methods: "ServerSekolah.status = 'Online'"
+                },
+                prompt: "Apa output dari `print(sv1.status, sv2.status)` setelah Class Attribute diubah melalui nama Class?",
+                code: `class ServerSekolah:\n    status = "Offline"\n\nsv1 = ServerSekolah()\nsv2 = ServerSekolah()\nServerSekolah.status = "Online"\nprint(sv1.status, sv2.status)`,
+                options: [
+                    "A. Offline Offline",
+                    "B. Online Offline",
+                    "C. Online Online",
+                    "D. Offline Online"
+                ],
+                correctIndex: 2,
+                explanation: "Karena `status` adalah Class Attribute dan diubah langsung pada `ServerSekolah.status = 'Online'`, maka seluruh objek (`sv1` dan `sv2`) yang mengacu pada class tersebut ikut melihat nilai baru yaitu 'Online Online'."
+            },
+            // 11. Mode D: Rakit Method dalam Class
+            {
+                id: "OOP11",
+                mode: "MODE_D",
+                modeLabel: "Mode D: Rakit Blueprint Class",
+                category: "Method & Perilaku Objek",
+                topicDetail: "4. Merakit Method dan memanggilnya dari Objek",
+                difficulty: "SEDANG",
+                maxBasePoints: 150,
+                anatomy: {
+                    className: "LampuPintar",
+                    instances: "lampu_kelas.nyalakan()",
+                    attrs: "status",
+                    methods: "def nyalakan(self):"
+                },
+                prompt: "RAKIT METHOD: Susunlah potongan baris berikut agar objek `lampu_kelas` berhasil memanggil method `nyalakan()`!",
+                code: `# Potongan Baris Kode:\n[1] lampu_kelas = LampuPintar()\n[2]     def nyalakan(self):\n[3] class LampuPintar:\n[4]         print("Lampu Menyala!")\n[5] lampu_kelas.nyalakan()`,
+                codeBlocks: [
+                    { id: "1", text: "lampu_kelas = LampuPintar()" },
+                    { id: "2", text: "    def nyalakan(self):" },
+                    { id: "3", text: "class LampuPintar:" },
+                    { id: "4", text: "        print(\"Lampu Menyala!\")" },
+                    { id: "5", text: "lampu_kelas.nyalakan()" }
+                ],
+                correctOrder: ["3", "2", "4", "1", "5"],
+                options: [
+                    "A. [3] -> [2] -> [4] -> [1] -> [5]",
+                    "B. [3] -> [4] -> [2] -> [1] -> [5]",
+                    "C. [1] -> [3] -> [2] -> [4] -> [5]",
+                    "D. [3] -> [2] -> [1] -> [4] -> [5]"
+                ],
+                correctIndex: 0,
+                explanation: "Urutan yang tepat: Deklarasi `class LampuPintar:` [3], definisi method `def nyalakan(self):` [2], isi method `print(...)` [4], instansiasi objek `lampu_kelas = LampuPintar()` [1], dan pemanggilan method `lampu_kelas.nyalakan()` [5]."
+            },
+            // 12. Mode E: Boss Battle (Interaksi Antar 2 Objek via Method)
+            {
+                id: "OOP12",
+                mode: "MODE_E",
+                modeLabel: "🔥 Mode E: Boss Battle OOP",
+                category: "Method & Perilaku Objek",
+                topicDetail: "4. Boss Battle: Interaksi antar dua Objek Python",
+                difficulty: "SULIT",
+                maxBasePoints: 250,
+                anatomy: {
+                    className: "RobotPetarung",
+                    instances: "alpha (HP:100), beta (HP:80)",
+                    attrs: "self.nama, self.hp, self.power",
+                    methods: "serang(self, target)"
+                },
+                prompt: "BOSS BATTLE: Perhatikan interaksi dua objek `alpha` dan `beta` berikut! Berapakah nilai `beta.hp` setelah kode selesai dijalankan?",
+                code: `class RobotPetarung:\n    def __init__(self, nama, hp, power):\n        self.nama = nama\n        self.hp = hp\n        self.power = power\n\n    def serang(self, target):\n        target.hp = target.hp - self.power\n\nalpha = RobotPetarung("Alpha", 100, 30)\nbeta = RobotPetarung("Beta", 80, 20)\nalpha.serang(beta)\nprint(beta.hp)`,
+                options: [
+                    "A. 70",
+                    "B. 50",
+                    "C. 60",
+                    "D. 80"
+                ],
+                correctIndex: 1,
+                explanation: "Saat `alpha.serang(beta)` dipanggil, `self` adalah `alpha` (`self.power` = 30) dan `target` adalah objek `beta` (`target.hp` awal = 80). Maka `beta.hp` berkurang sebesar `alpha.power`: 80 - 30 = 50."
+            }
+        ];
+
+        const TEAMS_META = {
+            "CLASS-ARCH": { name: "📐 Tim Class-Architect", badge: "📐 Class", color: "text-cyan-300", border: "border-cyan-400" },
+            "OBJ-FORGE": { name: "🤖 Tim Object-Forge", badge: "🤖 Object", color: "text-purple-300", border: "border-purple-400" },
+            "INIT-CORE": { name: "⚙️ Tim Init-Core", badge: "⚙️ Init", color: "text-yellow-300", border: "border-yellow-400" },
+            "METHOD-X": { name: "⚡ Tim Method-X", badge: "⚡ Method", color: "text-emerald-300", border: "border-emerald-400" }
+        };
+
+        const GITHUB_PAGES_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyAggGQpEBP09-zRMyRjhCUcqJp6lSHC0w0",
+            authDomain: "game-perulangan-python.firebaseapp.com",
+            projectId: "game-perulangan-python",
+            storageBucket: "game-perulangan-python.firebasestorage.app",
+            messagingSenderId: "595580026241",
+            appId: "1:595580026241:web:68d389aa79465dc2703c80",
+            measurementId: "G-Q3MLS4PZSD"
+        };
+
+        class PythonOOPArenaApp {
+            constructor() {
+                this.db = null;
+                this.auth = null;
+                this.user = null;
+                this.appId = typeof __app_id !== 'undefined' ? __app_id : 'python-loop-battle-kka';
+
+                this.role = null; // 'HOST' | 'STUDENT'
+                this.roomCode = null;
+                this.studentId = null;
+                this.studentName = null;
+                this.selectedJoinTeam = 'AUTO';
+                this.pidActiveTouchTeam = 'CLASS-ARCH';
+
+                this.setupConfig = {
+                    mode: 'ALL',
+                    category: 'ALL',
+                    difficulty: 'BERTAHAP',
+                    duration: 35,
+                    questionCount: 10,
+                    compType: 'TEAM'
+                };
+
+                this.roomData = null;
+                this.playersMap = {};
+                this.previousRanks = {};
+                this.studentCodeOrderSelection = [];
+                this.pidCodeOrderSelection = [];
+
+                // Interactive Lab State
+                this.labClassAttrPabrik = "CyberNusantara";
+                this.labObjects = [
+                    { id: "obj_1", varName: "r1", nama: "GatotBot", tipe: "🛡️ Penjaga", energi: 80 },
+                    { id: "obj_2", varName: "r2", nama: "GarudaX", tipe: "🚀 Penjelajah", energi: 100 }
+                ];
+
+                this.unsubRoom = null;
+                this.unsubPlayers = null;
+                this.unsubSubmissions = null;
+                this.hostTimerInterval = null;
+
+                this.soundEnabled = true;
+                this.synth = null;
+
+                this.initFirebase();
+                this.checkUrlJoinParams();
+            }
+
+            async initFirebase() {
+                try {
+                    const hasEnvConfig = typeof __firebase_config !== 'undefined' && __firebase_config;
+                    const firebaseConfig = hasEnvConfig
+                        ? JSON.parse(__firebase_config)
+                        : GITHUB_PAGES_FIREBASE_CONFIG;
+
+                    const app = initializeApp(firebaseConfig);
+                    this.db = getFirestore(app);
+                    this.auth = getAuth(app);
+
+                    if (hasEnvConfig && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(this.auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(this.auth);
+                    }
+
+                    onAuthStateChanged(this.auth, (u) => {
+                        if (u) {
+                            this.user = u;
+                            this.updateCloudBadge(true, "PID & Cloud Aktif");
+                        }
+                    });
+                } catch (err) {
+                    console.error("Firebase init error:", err);
+                    this.updateCloudBadge(false, "Mode Lokal / Cek Auth Firebase");
+                }
+            }
+
+            updateCloudBadge(isOnline, text) {
+                const dot = document.getElementById('cloud-dot');
+                const label = document.getElementById('cloud-text');
+                if (dot && label) {
+                    dot.className = isOnline
+                        ? "w-2.5 h-2.5 rounded-full bg-emerald-400"
+                        : "w-2.5 h-2.5 rounded-full bg-amber-400";
+                    label.textContent = text;
+                }
+            }
+
+            checkUrlJoinParams() {
+                const params = new URLSearchParams(window.location.search);
+                const codeParam = params.get('room');
+                if (codeParam) {
+                    const input = document.getElementById('student-room-code');
+                    if (input) input.value = codeParam.toUpperCase();
+                }
+            }
+
+            playSound(type) {
+                if (!this.soundEnabled || typeof Tone === 'undefined') return;
+                try {
+                    if (Tone.context.state !== 'running') Tone.start();
+                    if (!this.synth) {
+                        this.synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                        this.synth.volume.value = -8;
+                    }
+                    const now = Tone.now();
+                    if (type === 'join') this.synth.triggerAttackRelease(["C5", "E5"], "16n", now);
+                    else if (type === 'start') this.synth.triggerAttackRelease(["C4", "G4", "C5"], "8n", now);
+                    else if (type === 'correct') this.synth.triggerAttackRelease(["E5", "G5", "C6"], "8n", now);
+                    else if (type === 'wrong') this.synth.triggerAttackRelease(["F3", "E3"], "8n", now);
+                    else if (type === 'fanfare') this.synth.triggerAttackRelease(["C4", "E4", "G4", "C5"], "4n", now);
+                } catch (e) {}
+            }
+
+            toggleSound() {
+                this.soundEnabled = !this.soundEnabled;
+                const icon = document.getElementById('icon-sound');
+                if (icon) {
+                    icon.className = this.soundEnabled
+                        ? "ph-bold ph-speaker-high text-lg text-cyan-400"
+                        : "ph-bold ph-speaker-slash text-lg text-slate-500";
+                }
+                this.showToast(this.soundEnabled ? "Efek suara diaktifkan" : "Efek suara dibisukan");
+            }
+
+            toggleFullScreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen().catch(() => {});
+                }
+            }
+
+            showToast(msg) {
+                const box = document.getElementById('toast-box');
+                const txt = document.getElementById('toast-text');
+                if (!box || !txt) return;
+                txt.textContent = msg;
+                box.classList.remove('hidden');
+                box.classList.add('flex');
+                clearTimeout(this.toastTimeout);
+                this.toastTimeout = setTimeout(() => {
+                    box.classList.add('hidden');
+                    box.classList.remove('flex');
+                }, 3200);
+            }
+
+            showView(viewId) {
+                ['view-landing', 'view-host-setup', 'view-pid-dashboard', 'view-student-client'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+                const target = document.getElementById(viewId);
+                if (target) target.classList.remove('hidden');
+
+                const backBtn = document.getElementById('btn-back-home');
+                if (backBtn) {
+                    if (viewId === 'view-pid-dashboard' || viewId === 'view-student-client') {
+                        backBtn.classList.remove('hidden');
+                        backBtn.classList.add('flex');
+                    } else {
+                        backBtn.classList.add('hidden');
+                        backBtn.classList.remove('flex');
+                    }
+                }
+            }
+
+            /* ========================================== */
+            /* PID INTERACTIVE OOP LAB (TOUCH SIMULATOR)  */
+            /* ========================================== */
+            openPIDLabModal() {
+                const modal = document.getElementById('modal-pid-lab');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                this.renderPIDLabObjects();
+                this.appendLabConsole("# Lab Sentuh OOP Siap! Sentuh tombol Instansiasi atau panggil Method pada objek.");
+            }
+
+            closePIDLabModal() {
+                const modal = document.getElementById('modal-pid-lab');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            labInstantiateObject() {
+                const nama = document.getElementById('lab-input-nama').value;
+                const tipe = document.getElementById('lab-input-tipe').value;
+                const energi = parseInt(document.getElementById('lab-input-energi').value, 10);
+
+                const idx = this.labObjects.length + 1;
+                const varName = `r${idx}`;
+                this.labObjects.push({
+                    id: `obj_${Date.now()}`,
+                    varName,
+                    nama,
+                    tipe,
+                    energi
+                });
+
+                this.playSound('join');
+                this.renderPIDLabObjects();
+                this.appendLabConsole(`>>> ${varName} = Robot("${nama}", "${tipe}", ${energi})  # __init__ dipanggil (self = ${varName})`);
+            }
+
+            labCallMethod(objId, methodType) {
+                const obj = this.labObjects.find(o => o.id === objId);
+                if (!obj) return;
+
+                if (methodType === 'CHARGE') {
+                    obj.energi = Math.min(200, obj.energi + 20);
+                    this.playSound('correct');
+                    this.appendLabConsole(`>>> ${obj.varName}.isi_daya()  # self.energi bertambah +20 menjadi ${obj.energi}`);
+                } else if (methodType === 'ACTION') {
+                    if (obj.energi >= 15) {
+                        obj.energi -= 15;
+                        this.playSound('start');
+                        this.appendLabConsole(`>>> ${obj.varName}.patroli()  # "${obj.nama}" beraksi! self.energi berkurang menjadi ${obj.energi}`);
+                    } else {
+                        this.playSound('wrong');
+                        this.appendLabConsole(`>>> ${obj.varName}.patroli()  # Gagal! Energi ${obj.varName} tidak cukup (${obj.energi}). Panggil isi_daya()!`);
+                    }
+                }
+                this.renderPIDLabObjects();
+            }
+
+            labToggleClassAttribute() {
+                const presets = ["CyberNusantara", "GarudaTech_ID", "SMK_SMA_Maju", "PID_MerahPutih"];
+                const curIdx = presets.indexOf(this.labClassAttrPabrik);
+                this.labClassAttrPabrik = presets[(curIdx + 1) % presets.length];
+
+                document.getElementById('lab-code-class-attr').textContent = `"${this.labClassAttrPabrik}"`;
+                this.playSound('fanfare');
+                this.renderPIDLabObjects();
+                this.appendLabConsole(`>>> Robot.pabrik = "${this.labClassAttrPabrik}"  # Class Attribute berubah untuk SEMUA objek!`);
+            }
+
+            labResetObjects() {
+                this.labObjects = [];
+                this.renderPIDLabObjects();
+                this.appendLabConsole(`# Memori objek dibersihkan.`);
+            }
+
+            appendLabConsole(line) {
+                const box = document.getElementById('lab-console-output');
+                if (!box) return;
+                const div = document.createElement('div');
+                div.textContent = line;
+                box.appendChild(div);
+                box.scrollTop = box.scrollHeight;
+            }
+
+            renderPIDLabObjects() {
+                const grid = document.getElementById('lab-objects-grid');
+                if (!grid) return;
+
+                if (this.labObjects.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full py-10 text-center text-slate-500 text-sm">Belum ada Object di memori. Sentuh tombol "INSTANSIASI OBJECT" di sebelah kiri!</div>`;
+                    return;
+                }
+
+                grid.innerHTML = this.labObjects.map(obj => `
+                    <div class="p-4 rounded-2xl bg-slate-900 border-2 border-cyan-500/40 flex flex-col justify-between space-y-3 shadow-lg">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300 animate-float">
+                                    <i class="ph-fill ph-robot text-xl"></i>
+                                </div>
+                                <div>
+                                    <span class="font-mono font-black text-sm text-yellow-300">${obj.varName} = Robot()</span>
+                                    <span class="block text-[10px] text-slate-400">Instance Object (<code class="text-rose-300">self</code> = ${obj.varName})</span>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">Class: Robot</span>
+                        </div>
+
+                        <div class="space-y-1 font-mono text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                            <div class="flex justify-between"><span class="text-slate-400">${obj.varName}.pabrik <span class="text-[10px] text-purple-300">(Class Attr)</span>:</span> <span class="text-emerald-300 font-bold">"${this.labClassAttrPabrik}"</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400"><span class="text-rose-400">self</span>.nama:</span> <span class="text-white font-bold">"${obj.nama}"</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400"><span class="text-rose-400">self</span>.tipe:</span> <span class="text-cyan-300 font-bold">"${obj.tipe}"</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-400"><span class="text-rose-400">self</span>.energi:</span> <span class="text-yellow-300 font-black text-sm">${obj.energi}</span></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <button onclick="window.app.labCallMethod('${obj.id}', 'CHARGE')" class="py-2 px-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-300 font-mono font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition">
+                                <i class="ph-bold ph-lightning"></i> ${obj.varName}.isi_daya()
+                            </button>
+                            <button onclick="window.app.labCallMethod('${obj.id}', 'ACTION')" class="py-2 px-2.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/50 text-cyan-300 font-mono font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition">
+                                <i class="ph-bold ph-play"></i> ${obj.varName}.patroli()
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            /* ========================================== */
+            /* SETUP & ROOM CREATION                      */
+            /* ========================================== */
+            openHostSetup() {
+                this.showView('view-host-setup');
+            }
+
+            selectSetupMode(mode) {
+                this.setupConfig.mode = mode;
+                document.querySelectorAll('.setup-mode-btn').forEach(btn => {
+                    btn.className = btn.dataset.mode === mode
+                        ? "setup-mode-btn text-left p-3.5 rounded-2xl border-2 border-cyan-400 bg-cyan-500/15 transition"
+                        : "setup-mode-btn text-left p-3.5 rounded-2xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 transition";
+                });
+            }
+
+            selectSetupDiff(diff) {
+                this.setupConfig.difficulty = diff;
+                document.querySelectorAll('.setup-diff-btn').forEach(btn => {
+                    btn.className = btn.dataset.diff === diff
+                        ? "setup-diff-btn py-2.5 px-2 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-cyan-200 text-xs font-bold"
+                        : "setup-diff-btn py-2.5 px-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 text-xs font-bold";
+                });
+            }
+
+            selectCompType(type) {
+                this.setupConfig.compType = type;
+                const btnTeam = document.getElementById('btn-comp-team');
+                const btnIndiv = document.getElementById('btn-comp-indiv');
+                if (type === 'TEAM') {
+                    btnTeam.className = "p-3 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-left transition";
+                    btnIndiv.className = "p-3 rounded-xl border border-slate-700 bg-slate-900 text-left transition";
+                } else {
+                    btnIndiv.className = "p-3 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-left transition";
+                    btnTeam.className = "p-3 rounded-xl border border-slate-700 bg-slate-900 text-left transition";
+                }
+            }
+
+            selectJoinTeam(teamKey) {
+                this.selectedJoinTeam = teamKey;
+                document.querySelectorAll('.team-pick-btn').forEach(btn => {
+                    if (btn.dataset.team === teamKey) {
+                        btn.classList.add('border-2', 'border-cyan-400', 'bg-cyan-500/20');
+                    } else {
+                        btn.classList.remove('border-2', 'border-cyan-400', 'bg-cyan-500/20');
+                    }
+                });
+            }
+
+            selectPIDBoardTeam(teamKey) {
+                this.pidActiveTouchTeam = teamKey;
+                document.querySelectorAll('.pid-bteam-btn').forEach(btn => {
+                    if (btn.dataset.bteam === teamKey) {
+                        btn.className = "pid-bteam-btn px-3 py-1.5 rounded-xl border-2 border-cyan-400 bg-cyan-500/20 text-cyan-200 text-xs font-bold transition";
+                    } else {
+                        btn.className = "pid-bteam-btn px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 text-xs font-bold transition";
+                    }
+                });
+                const meta = TEAMS_META[teamKey];
+                this.showToast(`Layar Sentuh PID aktif untuk: ${meta.name}`);
+            }
+
+            buildFilteredQuestions() {
+                const cat = document.getElementById('setup-category')?.value || 'ALL';
+                const dur = parseInt(document.getElementById('setup-duration')?.value || '35', 10);
+                const count = parseInt(document.getElementById('setup-count')?.value || '10', 10);
+
+                this.setupConfig.category = cat;
+                this.setupConfig.duration = dur;
+                this.setupConfig.questionCount = count;
+
+                let pool = [...QUESTION_BANK];
+
+                if (this.setupConfig.mode !== 'ALL') {
+                    const byMode = pool.filter(q => q.mode === this.setupConfig.mode);
+                    if (byMode.length > 0) pool = byMode;
+                }
+
+                if (cat !== 'ALL') {
+                    const byCat = pool.filter(q => q.category === cat);
+                    if (byCat.length > 0) pool = byCat;
+                }
+
+                if (this.setupConfig.difficulty !== 'BERTAHAP') {
+                    const byDiff = pool.filter(q => q.difficulty === this.setupConfig.difficulty);
+                    if (byDiff.length > 0) pool = byDiff;
+                }
+
+                if (pool.length < count) {
+                    QUESTION_BANK.forEach(q => {
+                        if (pool.length < count && !pool.find(item => item.id === q.id)) {
+                            pool.push(q);
+                        }
+                    });
+                }
+
+                return pool.slice(0, count);
+            }
+
+            async createRoomOnServer() {
+                if (!this.user) {
+                    this.showToast("Menyiapkan koneksi server...");
+                    return;
+                }
+
+                const questions = this.buildFilteredQuestions();
+                const randNum = Math.floor(10 + Math.random() * 89);
+                const code = `OOP${randNum}`;
+                this.roomCode = code;
+                this.role = 'HOST';
+
+                const publicQuestions = questions.map(q => ({
+                    id: q.id,
+                    mode: q.mode,
+                    modeLabel: q.modeLabel,
+                    category: q.category,
+                    topicDetail: q.topicDetail,
+                    difficulty: q.difficulty,
+                    maxBasePoints: q.maxBasePoints,
+                    anatomy: q.anatomy || null,
+                    prompt: q.prompt,
+                    code: q.code,
+                    options: q.options,
+                    codeBlocks: q.codeBlocks || null
+                }));
+
+                const roomDocData = {
+                    roomCode: code,
+                    hostUid: this.user.uid,
+                    status: 'WAITING',
+                    compType: this.setupConfig.compType,
+                    mode: this.setupConfig.mode,
+                    duration: this.setupConfig.duration,
+                    remainingSeconds: this.setupConfig.duration,
+                    currentQuestionIndex: 0,
+                    totalQuestions: publicQuestions.length,
+                    questionsJSON: JSON.stringify(publicQuestions),
+                    revealedDataJSON: null,
+                    questionStatsJSON: JSON.stringify({}),
+                    createdAt: Date.now()
+                };
+
+                try {
+                    const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', code);
+                    await setDoc(roomRef, roomDocData);
+                    this.subscribeToRoom(code);
+                    this.showView('view-pid-dashboard');
+                    this.playSound('start');
+                    this.showToast(`Ruang PID ${code} siap digunakan!`);
+                } catch (err) {
+                    console.error("Failed creating room:", err);
+                    this.showToast("Gagal membuat ruang di server.");
+                }
+            }
+
+            async resumeAsHost() {
+                const input = document.getElementById('resume-room-input');
+                const code = (input?.value || '').trim().toUpperCase();
+                if (!code || !this.user) {
+                    this.showToast("Masukkan Kode Ruang PID terlebih dahulu.");
+                    return;
+                }
+
+                try {
+                    const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', code);
+                    const snap = await getDoc(roomRef);
+                    if (!snap.exists()) {
+                        this.showToast(`Ruang ${code} tidak ditemukan.`);
+                        return;
+                    }
+                    this.roomCode = code;
+                    this.role = 'HOST';
+                    this.subscribeToRoom(code);
+                    this.showView('view-pid-dashboard');
+                } catch (err) {
+                    this.showToast("Gagal membuka ruang.");
+                }
+            }
+
+            async joinRoomAsStudent() {
+                if (!this.user) return;
+                const code = (document.getElementById('student-room-code')?.value || '').trim().toUpperCase();
+                const nickname = (document.getElementById('student-nickname')?.value || '').trim();
+
+                if (!code) {
+                    this.showToast("Masukkan Kode Ruang yang tampil di PID!");
+                    return;
+                }
+                if (!nickname || nickname.length < 2) {
+                    this.showToast("Masukkan nama panggilan minimal 2 huruf!");
+                    return;
+                }
+
+                try {
+                    const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', code);
+                    const snap = await getDoc(roomRef);
+                    if (!snap.exists()) {
+                        this.showToast(`Kode Ruang ${code} tidak ditemukan!`);
+                        return;
+                    }
+
+                    const normalizedName = nickname.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const playerDocId = `${code}_${normalizedName}`;
+                    const playerRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_players', playerDocId);
+                    const existingSnap = await getDoc(playerRef);
+
+                    let assignedTeam = this.selectedJoinTeam;
+                    if (assignedTeam === 'AUTO') {
+                        const teamKeys = Object.keys(TEAMS_META);
+                        assignedTeam = teamKeys[Math.floor(Math.random() * teamKeys.length)];
+                    }
+
+                    if (existingSnap.exists()) {
+                        const ex = existingSnap.data();
+                        if (ex.uid === this.user.uid) {
+                            this.studentId = playerDocId;
+                            this.studentName = ex.name;
+                            this.roomCode = code;
+                            this.role = 'STUDENT';
+                            this.subscribeToRoom(code);
+                            this.showView('view-student-client');
+                            return;
+                        } else {
+                            this.showToast(`Nama "${nickname}" sudah dipakai di ruang ini!`);
+                            return;
+                        }
+                    }
+
+                    await setDoc(playerRef, {
+                        playerId: playerDocId,
+                        roomCode: code,
+                        uid: this.user.uid,
+                        name: nickname,
+                        team: assignedTeam,
+                        score: 0,
+                        correctCount: 0,
+                        answeredCount: 0,
+                        lastAnsweredQuestionIndex: -1,
+                        lastChoiceIndex: -1,
+                        lastRoundPoints: 0,
+                        lastAnswerCorrect: false,
+                        joinedAt: Date.now()
+                    });
+
+                    this.studentId = playerDocId;
+                    this.studentName = nickname;
+                    this.roomCode = code;
+                    this.role = 'STUDENT';
+                    this.subscribeToRoom(code);
+                    this.showView('view-student-client');
+                    this.playSound('join');
+                } catch (err) {
+                    this.showToast("Gagal bergabung ke ruang.");
+                }
+            }
+
+            /* ========================================== */
+            /* REAL-TIME FIRESTORE SYNC                   */
+            /* ========================================== */
+            subscribeToRoom(code) {
+                if (this.unsubRoom) this.unsubRoom();
+                if (this.unsubPlayers) this.unsubPlayers();
+                if (this.unsubSubmissions) this.unsubSubmissions();
+
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', code);
+                this.unsubRoom = onSnapshot(roomRef, (snap) => {
+                    if (!snap.exists()) return;
+                    this.roomData = snap.data();
+                    if (this.role === 'HOST') this.renderPIDDashboard();
+                    else if (this.role === 'STUDENT') this.renderStudentView();
+                }, (err) => console.error(err));
+
+                const playersCol = collection(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_players');
+                this.unsubPlayers = onSnapshot(playersCol, (snap) => {
+                    const nextMap = {};
+                    snap.forEach(docSnap => {
+                        const p = docSnap.data();
+                        if (p.roomCode === code) nextMap[p.playerId] = p;
+                    });
+                    this.playersMap = nextMap;
+                    if (this.role === 'HOST') this.renderPIDLeaderboardAndLobby();
+                    else if (this.role === 'STUDENT') this.renderStudentView();
+                }, (err) => console.error(err));
+
+                if (this.role === 'HOST') {
+                    const subCol = collection(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions');
+                    this.unsubSubmissions = onSnapshot(subCol, (snap) => {
+                        snap.forEach(docSnap => {
+                            const sub = docSnap.data();
+                            if (sub.roomCode === code && !sub.processed) {
+                                this.processStudentSubmissionOnHost(docSnap.id, sub);
+                            }
+                        });
+                    }, (err) => console.error(err));
+                }
+            }
+
+            async processStudentSubmissionOnHost(submissionDocId, sub) {
+                if (!this.roomData || this.roomData.status !== 'PLAYING') {
+                    const subRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions', submissionDocId);
+                    await updateDoc(subRef, { processed: true, rejected: true });
+                    return;
+                }
+
+                const qIdx = this.roomData.currentQuestionIndex;
+                const player = this.playersMap[sub.playerId];
+                if (!player || sub.questionIndex !== qIdx || player.lastAnsweredQuestionIndex === qIdx) {
+                    const subRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions', submissionDocId);
+                    await updateDoc(subRef, { processed: true });
+                    return;
+                }
+
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const currentPubQ = publicQuestions[qIdx];
+                const fullQ = QUESTION_BANK.find(q => q.id === currentPubQ?.id) || currentPubQ;
+
+                let isCorrect = false;
+                if (fullQ.mode === 'MODE_D' && Array.isArray(sub.orderedIds)) {
+                    isCorrect = JSON.stringify(sub.orderedIds) === JSON.stringify(fullQ.correctOrder);
+                } else {
+                    isCorrect = Number(sub.choiceIndex) === Number(fullQ.correctIndex);
+                }
+
+                let earnedPoints = 0;
+                if (isCorrect) {
+                    const base = fullQ.maxBasePoints || 100;
+                    const ratio = Math.max(0, Math.min(1, (this.roomData.remainingSeconds || 0) / (this.roomData.duration || 35)));
+                    const speedBonus = Math.round(ratio * 50);
+                    earnedPoints = base + speedBonus;
+                }
+
+                const playerRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_players', player.playerId);
+                await updateDoc(playerRef, {
+                    score: (player.score || 0) + earnedPoints,
+                    correctCount: (player.correctCount || 0) + (isCorrect ? 1 : 0),
+                    answeredCount: (player.answeredCount || 0) + 1,
+                    lastAnsweredQuestionIndex: qIdx,
+                    lastChoiceIndex: sub.choiceIndex ?? 0,
+                    lastRoundPoints: earnedPoints,
+                    lastAnswerCorrect: isCorrect
+                });
+
+                const stats = JSON.parse(this.roomData.questionStatsJSON || '{}');
+                const qStat = stats[fullQ.id] || { total: 0, correct: 0, category: fullQ.category, prompt: fullQ.prompt };
+                qStat.total += 1;
+                if (isCorrect) qStat.correct += 1;
+                stats[fullQ.id] = qStat;
+
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                await updateDoc(roomRef, { questionStatsJSON: JSON.stringify(stats) });
+
+                const subRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions', submissionDocId);
+                await updateDoc(subRef, { processed: true, earnedPoints, isCorrect });
+            }
+
+            /* ========================================== */
+            /* DIRECT TOUCH INTERACTION ON PID SCREEN     */
+            /* ========================================== */
+            async ensurePIDTouchRepresentativePlayer(teamKey) {
+                const repId = `${this.roomCode}_pid_${teamKey.toLowerCase()}`;
+                if (!this.playersMap[repId]) {
+                    const meta = TEAMS_META[teamKey] || TEAMS_META['CLASS-ARCH'];
+                    const playerRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_players', repId);
+                    await setDoc(playerRef, {
+                        playerId: repId,
+                        roomCode: this.roomCode,
+                        uid: this.user.uid,
+                        name: `${meta.badge} (Sentuh PID)`,
+                        team: teamKey,
+                        score: 0,
+                        correctCount: 0,
+                        answeredCount: 0,
+                        lastAnsweredQuestionIndex: -1,
+                        joinedAt: Date.now()
+                    });
+                }
+                return repId;
+            }
+
+            async submitPIDTouchAnswer(choiceIndex) {
+                if (!this.roomData || this.roomData.status !== 'PLAYING') {
+                    this.showToast("Permainan sedang dijeda atau pembahasan sudah terbuka.");
+                    return;
+                }
+                const teamKey = this.pidActiveTouchTeam || 'CLASS-ARCH';
+                const repId = await this.ensurePIDTouchRepresentativePlayer(teamKey);
+                const qIdx = this.roomData.currentQuestionIndex || 0;
+
+                const existingRep = this.playersMap[repId];
+                if (existingRep && existingRep.lastAnsweredQuestionIndex === qIdx) {
+                    this.showToast(`${TEAMS_META[teamKey].name} sudah mengunci jawaban di ronde ini! Pilih tim lain di bar atas jika tim lain ingin menjawab.`);
+                    return;
+                }
+
+                const subId = `${repId}_Q${qIdx}`;
+                const subRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions', subId);
+                await setDoc(subRef, {
+                    roomCode: this.roomCode,
+                    playerId: repId,
+                    questionIndex: qIdx,
+                    choiceIndex,
+                    orderedIds: null,
+                    submittedAt: Date.now(),
+                    processed: false
+                });
+
+                this.playSound('join');
+                this.showToast(`Jawaban Sentuh PID untuk ${TEAMS_META[teamKey].name} terkirim!`);
+            }
+
+            pickPIDCodeBlock(blockId) {
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const q = publicQuestions[this.roomData.currentQuestionIndex || 0];
+                if (q && !this.pidCodeOrderSelection.includes(blockId)) {
+                    this.pidCodeOrderSelection.push(blockId);
+                    this.renderPIDCodeOrderingUI(q);
+                }
+            }
+
+            resetPIDCodeOrder() {
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const q = publicQuestions[this.roomData.currentQuestionIndex || 0];
+                this.pidCodeOrderSelection = [];
+                if (q) this.renderPIDCodeOrderingUI(q);
+            }
+
+            async submitPIDCodeOrder() {
+                if (!this.roomData || this.roomData.status !== 'PLAYING') return;
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const q = publicQuestions[this.roomData.currentQuestionIndex || 0];
+                if (!q) return;
+
+                if (this.pidCodeOrderSelection.length < (q.codeBlocks?.length || 4)) {
+                    this.showToast("Sentuh dan susun semua baris kode terlebih dahulu!");
+                    return;
+                }
+
+                const teamKey = this.pidActiveTouchTeam || 'CLASS-ARCH';
+                const repId = await this.ensurePIDTouchRepresentativePlayer(teamKey);
+                const qIdx = this.roomData.currentQuestionIndex || 0;
+
+                const subId = `${repId}_Q${qIdx}`;
+                const subRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions', subId);
+                await setDoc(subRef, {
+                    roomCode: this.roomCode,
+                    playerId: repId,
+                    questionIndex: qIdx,
+                    choiceIndex: 0,
+                    orderedIds: this.pidCodeOrderSelection,
+                    submittedAt: Date.now(),
+                    processed: false
+                });
+
+                this.playSound('join');
+                this.showToast(`Rakitan Class dari ${TEAMS_META[teamKey].name} berhasil dikunci di PID!`);
+            }
+
+            /* ========================================== */
+            /* HOST GAME CONTROLS                         */
+            /* ========================================== */
+            async hostStartGame() {
+                if (!this.roomData) return;
+                // Automatically ensure the 4 Squad Teams exist if no mobile players joined yet so PID Touch works immediately
+                if (Object.keys(this.playersMap).length === 0) {
+                    await this.addSimulatedBotPlayers();
+                }
+
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                await updateDoc(roomRef, {
+                    status: 'PLAYING',
+                    currentQuestionIndex: 0,
+                    remainingSeconds: this.roomData.duration,
+                    revealedDataJSON: null
+                });
+
+                this.playSound('start');
+                this.startHostCountdownLoop();
+            }
+
+            startHostCountdownLoop() {
+                clearInterval(this.hostTimerInterval);
+                this.hostTimerInterval = setInterval(async () => {
+                    if (!this.roomData || this.role !== 'HOST') {
+                        clearInterval(this.hostTimerInterval);
+                        return;
+                    }
+                    if (this.roomData.status !== 'PLAYING') return;
+
+                    const nextSec = (this.roomData.remainingSeconds || 0) - 1;
+                    if (nextSec <= 0) {
+                        clearInterval(this.hostTimerInterval);
+                        await this.hostRevealRound();
+                    } else {
+                        const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                        await updateDoc(roomRef, { remainingSeconds: nextSec });
+                    }
+                }, 1000);
+            }
+
+            async hostTogglePause() {
+                if (!this.roomData) return;
+                const nextStatus = this.roomData.status === 'PAUSED' ? 'PLAYING' : 'PAUSED';
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                await updateDoc(roomRef, { status: nextStatus });
+
+                if (nextStatus === 'PLAYING') {
+                    this.startHostCountdownLoop();
+                    this.showToast("Permainan dilanjutkan!");
+                } else {
+                    this.showToast("Permainan dijeda.");
+                }
+            }
+
+            async hostRevealRound() {
+                if (!this.roomData) return;
+                clearInterval(this.hostTimerInterval);
+
+                const qIdx = this.roomData.currentQuestionIndex;
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const pubQ = publicQuestions[qIdx];
+                const fullQ = QUESTION_BANK.find(q => q.id === pubQ?.id) || QUESTION_BANK[0];
+
+                const revealPayload = {
+                    correctIndex: fullQ.correctIndex,
+                    correctOptionText: fullQ.options[fullQ.correctIndex],
+                    explanation: fullQ.explanation
+                };
+
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                await updateDoc(roomRef, {
+                    status: 'REVEALED',
+                    remainingSeconds: 0,
+                    revealedDataJSON: JSON.stringify(revealPayload)
+                });
+
+                this.playSound('correct');
+            }
+
+            async hostNextQuestion() {
+                if (!this.roomData) return;
+                const nextIdx = (this.roomData.currentQuestionIndex || 0) + 1;
+                if (nextIdx >= this.roomData.totalQuestions) {
+                    await this.hostFinishGame();
+                    return;
+                }
+
+                this.pidCodeOrderSelection = [];
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                await updateDoc(roomRef, {
+                    status: 'PLAYING',
+                    currentQuestionIndex: nextIdx,
+                    remainingSeconds: this.roomData.duration,
+                    revealedDataJSON: null
+                });
+
+                this.playSound('start');
+                this.startHostCountdownLoop();
+            }
+
+            async hostFinishGame() {
+                if (!this.roomData) return;
+                clearInterval(this.hostTimerInterval);
+                const roomRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_rooms', this.roomCode);
+                await updateDoc(roomRef, {
+                    status: 'FINISHED',
+                    remainingSeconds: 0
+                });
+                this.playSound('fanfare');
+            }
+
+            /* ========================================== */
+            /* RENDERING PID DASHBOARD                    */
+            /* ========================================== */
+            renderPIDDashboard() {
+                if (!this.roomData) return;
+
+                document.getElementById('pid-room-code').textContent = this.roomData.roomCode;
+                document.getElementById('pid-lobby-big-code').textContent = this.roomData.roomCode;
+
+                const joinUrl = `${window.location.origin}${window.location.pathname}?room=${this.roomData.roomCode}`;
+                const qrImg = document.getElementById('pid-qr-img');
+                if (qrImg && qrImg.dataset.code !== this.roomData.roomCode) {
+                    qrImg.dataset.code = this.roomData.roomCode;
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(joinUrl)}`;
+                }
+
+                const statusMap = {
+                    'WAITING': { text: 'MENUNGGU', dot: 'bg-yellow-400', color: 'text-yellow-300' },
+                    'PLAYING': { text: 'AKTIF BERLANGSUNG', dot: 'bg-emerald-400 animate-ping', color: 'text-emerald-300' },
+                    'PAUSED': { text: 'DIJEDA GURU', dot: 'bg-amber-400', color: 'text-amber-300' },
+                    'REVEALED': { text: 'PEMBAHASAN OOP', dot: 'bg-purple-400', color: 'text-purple-300' },
+                    'FINISHED': { text: 'EVALUASI SELESAI', dot: 'bg-cyan-400', color: 'text-cyan-300' }
+                };
+                const st = statusMap[this.roomData.status] || statusMap['WAITING'];
+                document.getElementById('pid-status-label').textContent = st.text;
+                document.getElementById('pid-status-label').className = `font-bold text-xs sm:text-sm uppercase ${st.color}`;
+                document.getElementById('pid-status-dot').className = `w-2.5 h-2.5 rounded-full ${st.dot}`;
+
+                const btnStart = document.getElementById('btn-pid-start');
+                const btnPause = document.getElementById('btn-pid-pause');
+                const btnReveal = document.getElementById('btn-pid-reveal');
+                const btnNext = document.getElementById('btn-pid-next');
+                const btnFinish = document.getElementById('btn-pid-finish');
+
+                [btnStart, btnPause, btnReveal, btnNext, btnFinish].forEach(b => {
+                    b.classList.add('hidden');
+                    b.classList.remove('flex');
+                });
+
+                if (this.roomData.status === 'WAITING') {
+                    btnStart.classList.remove('hidden');
+                    btnStart.classList.add('flex');
+                } else if (this.roomData.status === 'PLAYING' || this.roomData.status === 'PAUSED') {
+                    btnPause.classList.remove('hidden');
+                    btnPause.classList.add('flex');
+                    btnReveal.classList.remove('hidden');
+                    btnReveal.classList.add('flex');
+                    btnFinish.classList.remove('hidden');
+                    btnFinish.classList.add('flex');
+                    document.getElementById('text-pid-pause').textContent = this.roomData.status === 'PAUSED' ? 'Lanjutkan' : 'Jeda';
+                } else if (this.roomData.status === 'REVEALED') {
+                    if (this.roomData.currentQuestionIndex + 1 < this.roomData.totalQuestions) {
+                        btnNext.classList.remove('hidden');
+                        btnNext.classList.add('flex');
+                    }
+                    btnFinish.classList.remove('hidden');
+                    btnFinish.classList.add('flex');
+                }
+
+                const subLobby = document.getElementById('pid-subview-lobby');
+                const subQuestion = document.getElementById('pid-subview-question');
+                const subEval = document.getElementById('pid-subview-evaluation');
+
+                subLobby.classList.add('hidden');
+                subQuestion.classList.add('hidden');
+                subEval.classList.add('hidden');
+
+                if (this.roomData.status === 'WAITING') {
+                    subLobby.classList.remove('hidden');
+                } else if (this.roomData.status === 'PLAYING' || this.roomData.status === 'PAUSED' || this.roomData.status === 'REVEALED') {
+                    subQuestion.classList.remove('hidden');
+                    this.renderPIDQuestionContent();
+                } else if (this.roomData.status === 'FINISHED') {
+                    subEval.classList.remove('hidden');
+                    this.renderPIDEvaluationReport();
+                }
+
+                this.renderPIDLeaderboardAndLobby();
+            }
+
+            renderPIDQuestionContent() {
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const qIdx = this.roomData.currentQuestionIndex || 0;
+                const q = publicQuestions[qIdx];
+                if (!q) return;
+
+                document.getElementById('pid-mode-badge').textContent = q.modeLabel;
+                document.getElementById('pid-category-title').textContent = q.topicDetail;
+                document.getElementById('pid-q-number').textContent = `SOAL ${qIdx + 1} / ${this.roomData.totalQuestions}`;
+                document.getElementById('pid-q-mode').textContent = q.modeLabel;
+                document.getElementById('pid-q-diff').textContent = q.difficulty;
+                document.getElementById('pid-q-topic').textContent = `Materi: ${q.topicDetail}`;
+                document.getElementById('pid-q-prompt').textContent = q.prompt;
+                document.getElementById('pid-q-code').textContent = q.code;
+
+                // Visual OOP X-Ray Anatomy Card
+                const anatomyBox = document.getElementById('pid-visual-anatomy');
+                if (anatomyBox && q.anatomy) {
+                    anatomyBox.innerHTML = `
+                        <div class="p-2 rounded-xl bg-slate-900 border border-cyan-500/30 flex items-center justify-between">
+                            <span class="text-slate-400">📐 Class:</span>
+                            <span class="font-mono font-bold text-cyan-300">${this.escapeHtml(q.anatomy.className)}</span>
+                        </div>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-purple-500/30 flex items-center justify-between">
+                            <span class="text-slate-400">🤖 Object:</span>
+                            <span class="font-mono font-bold text-purple-300">${this.escapeHtml(q.anatomy.instances)}</span>
+                        </div>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-yellow-500/30 flex items-center justify-between">
+                            <span class="text-slate-400">📦 Atribut:</span>
+                            <span class="font-mono font-bold text-yellow-300">${this.escapeHtml(q.anatomy.attrs)}</span>
+                        </div>
+                        <div class="p-2 rounded-xl bg-slate-900 border border-emerald-500/30 flex items-center justify-between">
+                            <span class="text-slate-400">⚡ Method:</span>
+                            <span class="font-mono font-bold text-emerald-300">${this.escapeHtml(q.anatomy.methods)}</span>
+                        </div>
+                    `;
+                }
+
+                // Timer display
+                const rem = this.roomData.remainingSeconds || 0;
+                const dur = this.roomData.duration || 35;
+                document.getElementById('pid-timer-text').textContent = rem;
+                const pct = Math.max(0, Math.min(100, (rem / dur) * 100));
+                document.getElementById('pid-timer-bar').style.width = `${pct}%`;
+
+                const isRevealed = this.roomData.status === 'REVEALED';
+                const revealedObj = isRevealed && this.roomData.revealedDataJSON ? JSON.parse(this.roomData.revealedDataJSON) : null;
+
+                const optContainer = document.getElementById('pid-q-options');
+                const pidOrderArea = document.getElementById('pid-order-area');
+
+                if (q.mode === 'MODE_D' && Array.isArray(q.codeBlocks) && !isRevealed) {
+                    optContainer.classList.add('hidden');
+                    pidOrderArea.classList.remove('hidden');
+                    this.renderPIDCodeOrderingUI(q);
+                } else {
+                    pidOrderArea.classList.add('hidden');
+                    optContainer.classList.remove('hidden');
+
+                    const badgeColors = [
+                        'border-cyan-500/40 bg-slate-950/90 hover:border-cyan-400 hover:bg-cyan-500/10',
+                        'border-purple-500/40 bg-slate-950/90 hover:border-purple-400 hover:bg-purple-500/10',
+                        'border-yellow-500/40 bg-slate-950/90 hover:border-yellow-400 hover:bg-yellow-500/10',
+                        'border-emerald-500/40 bg-slate-950/90 hover:border-emerald-400 hover:bg-emerald-500/10'
+                    ];
+
+                    optContainer.innerHTML = (q.options || []).map((optText, idx) => {
+                        let boxStyle = badgeColors[idx % badgeColors.length];
+                        let iconHtml = `<span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="ph-fill ph-hand-tap text-yellow-300"></i> Sentuh</span>`;
+                        if (isRevealed && revealedObj) {
+                            if (idx === revealedObj.correctIndex) {
+                                boxStyle = 'border-2 border-emerald-400 bg-emerald-500/20 shadow-lg shadow-emerald-500/20 animate-pulse-fast';
+                                iconHtml = `<i class="ph-fill ph-check-circle text-2xl text-emerald-400"></i>`;
+                            } else {
+                                boxStyle = 'border-slate-800 bg-slate-950/40 opacity-50';
+                                iconHtml = '';
+                            }
+                        }
+                        return `
+                            <button type="button" ${isRevealed ? 'disabled' : ''} onclick="window.app.submitPIDTouchAnswer(${idx})"
+                                class="p-4 rounded-2xl border ${boxStyle} flex items-center justify-between gap-3 text-left transition transform active:scale-98">
+                                <span class="font-mono font-bold text-base sm:text-xl text-white">${this.escapeHtml(optText)}</span>
+                                ${iconHtml}
+                            </button>
+                        `;
+                    }).join('');
+                }
+
+                const revealBox = document.getElementById('pid-round-reveal-box');
+                if (isRevealed && revealedObj) {
+                    revealBox.classList.remove('hidden');
+                    document.getElementById('pid-reveal-correct-answer').textContent = `Jawaban Benar: ${revealedObj.correctOptionText}`;
+                    document.getElementById('pid-reveal-explanation').textContent = revealedObj.explanation;
+
+                    const players = Object.values(this.playersMap);
+                    const answeredThisRound = players.filter(p => p.lastAnsweredQuestionIndex === qIdx);
+                    const correctThisRound = answeredThisRound.filter(p => p.lastAnswerCorrect);
+                    const acc = players.length > 0 ? Math.round((correctThisRound.length / players.length) * 100) : 0;
+
+                    document.getElementById('pid-reveal-accuracy').textContent = `${acc}%`;
+                    document.getElementById('pid-reveal-counts').textContent = `${correctThisRound.length}/${players.length} Benar`;
+                } else {
+                    revealBox.classList.add('hidden');
+                }
+            }
+
+            renderPIDCodeOrderingUI(q) {
+                const selectedBox = document.getElementById('pid-order-selected');
+                const poolBox = document.getElementById('pid-order-pool');
+                if (!selectedBox || !poolBox) return;
+
+                selectedBox.innerHTML = this.pidCodeOrderSelection.length === 0
+                    ? `<div class="text-slate-500 italic py-6 text-center">Sentuh potongan baris kode di sebelah kiri untuk merakit Class...</div>`
+                    : this.pidCodeOrderSelection.map((blockId, i) => {
+                        const blk = q.codeBlocks.find(b => b.id === blockId);
+                        return `<div class="px-3 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-200 font-bold">${i + 1}. ${this.escapeHtml(blk?.text || '')}</div>`;
+                    }).join('');
+
+                poolBox.innerHTML = (q.codeBlocks || []).map(blk => {
+                    const picked = this.pidCodeOrderSelection.includes(blk.id);
+                    return `
+                        <button type="button" ${picked ? 'disabled' : ''} onclick="window.app.pickPIDCodeBlock('${blk.id}')"
+                            class="w-full p-3 rounded-xl border text-left font-mono text-xs sm:text-sm transition ${picked ? 'bg-slate-900 border-slate-800 text-slate-600' : 'bg-slate-900 border-slate-700 hover:border-cyan-400 text-white active:scale-98'}">
+                            [${blk.id}] ${this.escapeHtml(blk.text)}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            renderPIDLeaderboardAndLobby() {
+                const players = Object.values(this.playersMap);
+                document.getElementById('pid-player-count').textContent = players.length;
+                document.getElementById('pid-lobby-counter-badge').textContent = `${players.length} Siap`;
+
+                const qIdx = this.roomData?.currentQuestionIndex || 0;
+                const answeredCount = players.filter(p => p.lastAnsweredQuestionIndex === qIdx).length;
+                const progEl = document.getElementById('pid-answered-progress');
+                if (progEl) progEl.textContent = `${answeredCount} / ${players.length}`;
+
+                const lobbyList = document.getElementById('pid-lobby-players-list');
+                if (lobbyList) {
+                    if (players.length === 0) {
+                        lobbyList.innerHTML = `<div class="col-span-full py-6 text-center text-slate-400 text-xs sm:text-sm">Klik <strong>"+ Aktifkan 4 Skuad Tim di PID"</strong> jika ingin langsung bermain dengan layar sentuh PID, atau minta murid scan QR Code!</div>`;
+                    } else {
+                        lobbyList.innerHTML = players.map(p => {
+                            const tMeta = TEAMS_META[p.team] || TEAMS_META['CLASS-ARCH'];
+                            return `
+                                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
+                                    <span class="font-bold text-xs text-white truncate">${this.escapeHtml(p.name)}</span>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 ${tMeta.color}">${tMeta.badge}</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+
+                const teamSection = document.getElementById('pid-team-leaderboard-section');
+                if (this.roomData?.compType === 'INDIVIDUAL') {
+                    teamSection.classList.add('hidden');
+                } else {
+                    teamSection.classList.remove('hidden');
+                    const teamTotals = {};
+                    Object.keys(TEAMS_META).forEach(k => {
+                        teamTotals[k] = { key: k, score: 0, members: 0 };
+                    });
+                    players.forEach(p => {
+                        if (teamTotals[p.team]) {
+                            teamTotals[p.team].score += (p.score || 0);
+                            teamTotals[p.team].members += 1;
+                        }
+                    });
+                    const sortedTeams = Object.values(teamTotals).sort((a, b) => b.score - a.score);
+                    const maxScore = Math.max(100, sortedTeams[0]?.score || 100);
+
+                    document.getElementById('pid-team-standings-list').innerHTML = sortedTeams.map((t, idx) => {
+                        const meta = TEAMS_META[t.key];
+                        const barWidth = Math.min(100, Math.round((t.score / maxScore) * 100));
+                        return `
+                            <div class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800">
+                                <div class="flex items-center justify-between text-xs mb-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-display font-black text-yellow-400">#${idx + 1}</span>
+                                        <span class="font-bold ${meta.color}">${meta.name}</span>
+                                    </div>
+                                    <span class="font-display font-black text-white">${t.score} Poin</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-500" style="width: ${barWidth}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                const sortedPlayers = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
+                const top10 = sortedPlayers.slice(0, 10);
+                const indivContainer = document.getElementById('pid-individual-standings-list');
+
+                if (top10.length === 0) {
+                    indivContainer.innerHTML = `<div class="py-6 text-center text-xs text-slate-500">Menunggu skor masuk...</div>`;
+                } else {
+                    indivContainer.innerHTML = top10.map((p, idx) => {
+                        const rank = idx + 1;
+                        const acc = p.answeredCount > 0 ? Math.round((p.correctCount / p.answeredCount) * 100) : 0;
+                        const tMeta = TEAMS_META[p.team] || TEAMS_META['CLASS-ARCH'];
+                        return `
+                            <div class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800 flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="w-6 text-center font-display font-black text-xs ${rank <= 3 ? 'text-yellow-300' : 'text-slate-400'}">#${rank}</span>
+                                    <div class="truncate">
+                                        <span class="font-bold text-xs sm:text-sm text-white block truncate">${this.escapeHtml(p.name)}</span>
+                                        <span class="text-[10px] ${tMeta.color}">${tMeta.badge} • ${p.correctCount || 0} Benar (${acc}%)</span>
+                                    </div>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <span class="font-display font-black text-sm text-cyan-300">${p.score || 0}</span>
+                                    <span class="block text-[10px] text-slate-500">poin</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            renderPIDEvaluationReport() {
+                const players = Object.values(this.playersMap).sort((a, b) => (b.score || 0) - (a.score || 0));
+                const totalPlayers = players.length;
+                const totalQ = this.roomData.totalQuestions || 1;
+
+                let sumAcc = 0;
+                players.forEach(p => {
+                    const acc = p.answeredCount > 0 ? (p.correctCount / p.answeredCount) * 100 : 0;
+                    sumAcc += acc;
+                });
+                const avgAcc = totalPlayers > 0 ? Math.round(sumAcc / totalPlayers) : 0;
+                const topScore = players[0]?.score || 0;
+
+                document.getElementById('eval-stat-players').textContent = `${totalPlayers} Peserta`;
+                document.getElementById('eval-stat-accuracy').textContent = `${avgAcc}%`;
+                document.getElementById('eval-stat-questions').textContent = `${totalQ} Soal`;
+                document.getElementById('eval-stat-topscore').textContent = `${topScore} Poin`;
+
+                const winnerBanner = document.getElementById('eval-winner-banner');
+                const bestIndiv = players[0];
+                winnerBanner.innerHTML = `
+                    <div class="text-xs font-bold uppercase tracking-widest text-yellow-300 mb-1">ARSITEK OOP TERBAIK ARENA</div>
+                    <div class="font-display font-black text-2xl sm:text-4xl text-white mb-1">${this.escapeHtml(bestIndiv?.name || 'Tim Kelas')}</div>
+                    <div class="text-sm text-cyan-300 font-bold">Total Skor: ${bestIndiv?.score || 0} Poin • ${bestIndiv?.correctCount || 0} Tantangan OOP Tuntas</div>
+                `;
+
+                const stats = JSON.parse(this.roomData.questionStatsJSON || '{}');
+                const catMap = {};
+                const qFailureList = [];
+
+                Object.keys(stats).forEach(qid => {
+                    const item = stats[qid];
+                    const catName = item.category || 'Konsep OOP';
+                    if (!catMap[catName]) catMap[catName] = { correct: 0, total: 0 };
+                    catMap[catName].correct += item.correct;
+                    catMap[catName].total += item.total;
+
+                    const successRate = item.total > 0 ? Math.round((item.correct / item.total) * 100) : 0;
+                    qFailureList.push({
+                        qid,
+                        prompt: item.prompt,
+                        category: catName,
+                        successRate
+                    });
+                });
+
+                const catContainer = document.getElementById('eval-category-breakdown');
+                const catEntries = Object.entries(catMap);
+                catContainer.innerHTML = catEntries.length === 0
+                    ? `<p class="text-xs text-slate-400">Belum ada data kategori.</p>`
+                    : catEntries.map(([catName, val]) => {
+                        const pct = val.total > 0 ? Math.round((val.correct / val.total) * 100) : 0;
+                        const barColor = pct >= 75 ? 'bg-emerald-400' : pct >= 50 ? 'bg-yellow-400' : 'bg-rose-400';
+                        return `
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-white">${this.escapeHtml(catName)}</span>
+                                    <span class="text-cyan-300">${pct}% Paham</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                                    <div class="h-full ${barColor}" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                qFailureList.sort((a, b) => a.successRate - b.successRate);
+                const hardestContainer = document.getElementById('eval-hardest-questions');
+                hardestContainer.innerHTML = qFailureList.length === 0
+                    ? `<p class="text-xs text-slate-400">Semua konsep terjawab dengan baik.</p>`
+                    : qFailureList.slice(0, 3).map(item => `
+                        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
+                            <div class="truncate">
+                                <span class="text-xs font-bold text-white block truncate">${this.escapeHtml(item.prompt)}</span>
+                                <span class="text-[11px] text-slate-400">Materi: ${this.escapeHtml(item.category)}</span>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 font-bold text-xs shrink-0">${item.successRate}% Benar</span>
+                        </div>
+                    `).join('');
+
+                const recEl = document.getElementById('eval-teacher-recommendation');
+                const weakest = qFailureList[0];
+                if (weakest && weakest.successRate < 70) {
+                    recEl.innerHTML = `<strong>Rekomendasi Penguatan Guru:</strong> Gunakan fitur <strong>Lab Sentuh OOP (PID)</strong> di bagian atas layar untuk mendemonstrasikan kembali materi <strong>${this.escapeHtml(weakest.category)}</strong> secara visual bersama murid.`;
+                } else {
+                    recEl.innerHTML = `<strong>Refleksi Pembelajaran:</strong> Penguasaan fondasi OOP (Class, Object, Atribut, Class Atribut, <code class="font-mono">__init__</code>, <code class="font-mono">self</code>, dan Method) sudah sangat solid (${avgAcc}%). Kelas siap lanjut ke materi Enkapsulasi & Inheritance!`;
+                }
+            }
+
+            /* ========================================== */
+            /* STUDENT VIEW RENDERING                     */
+            /* ========================================== */
+            renderStudentView() {
+                if (!this.roomData) return;
+                const me = this.playersMap[this.studentId];
+
+                document.getElementById('student-hud-room').textContent = this.roomCode;
+                if (me) {
+                    document.getElementById('student-hud-name').textContent = me.name;
+                    document.getElementById('student-hud-score').textContent = me.score || 0;
+                    const tMeta = TEAMS_META[me.team] || TEAMS_META['CLASS-ARCH'];
+                    document.getElementById('student-hud-team').textContent = tMeta.badge;
+                    document.getElementById('student-accuracy-footer').textContent = `Benar: ${me.correctCount || 0} / ${me.answeredCount || 0} Soal`;
+
+                    const sorted = Object.values(this.playersMap).sort((a, b) => (b.score || 0) - (a.score || 0));
+                    const myRank = sorted.findIndex(p => p.playerId === this.studentId) + 1;
+                    document.getElementById('student-rank-footer').textContent = myRank > 0 ? `Peringkat: #${myRank}` : 'Peringkat: -';
+                }
+
+                const stWaiting = document.getElementById('student-state-waiting');
+                const stQuestion = document.getElementById('student-state-question');
+                const stSubmitted = document.getElementById('student-state-submitted');
+                const stRevealed = document.getElementById('student-state-revealed');
+                const stFinished = document.getElementById('student-state-finished');
+
+                [stWaiting, stQuestion, stSubmitted, stRevealed, stFinished].forEach(el => el.classList.add('hidden'));
+
+                const qIdx = this.roomData.currentQuestionIndex || 0;
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const currentQ = publicQuestions[qIdx];
+
+                if (this.roomData.status === 'WAITING') {
+                    stWaiting.classList.remove('hidden');
+                } else if (this.roomData.status === 'PLAYING' || this.roomData.status === 'PAUSED') {
+                    if (me && me.lastAnsweredQuestionIndex === qIdx) {
+                        stSubmitted.classList.remove('hidden');
+                    } else if (currentQ) {
+                        stQuestion.classList.remove('hidden');
+                        this.populateStudentActiveQuestion(currentQ, qIdx);
+                    }
+                } else if (this.roomData.status === 'REVEALED') {
+                    stRevealed.classList.remove('hidden');
+                    this.populateStudentRevealedState(me, qIdx);
+                } else if (this.roomData.status === 'FINISHED') {
+                    stFinished.classList.remove('hidden');
+                    this.populateStudentFinishedState(me);
+                }
+            }
+
+            populateStudentActiveQuestion(q, qIdx) {
+                document.getElementById('student-q-num').textContent = `SOAL ${qIdx + 1} / ${this.roomData.totalQuestions}`;
+                document.getElementById('student-q-mode-badge').textContent = q.modeLabel;
+                document.getElementById('student-q-timer').textContent = this.roomData.remainingSeconds || 0;
+                document.getElementById('student-q-prompt').textContent = q.prompt;
+                document.getElementById('student-q-code').textContent = q.code;
+
+                const mcqArea = document.getElementById('student-mcq-area');
+                const orderArea = document.getElementById('student-order-area');
+
+                if (q.mode === 'MODE_D' && Array.isArray(q.codeBlocks)) {
+                    mcqArea.classList.add('hidden');
+                    orderArea.classList.remove('hidden');
+                    if (this.currentRenderedStudentQId !== q.id) {
+                        this.currentRenderedStudentQId = q.id;
+                        this.studentCodeOrderSelection = [];
+                        this.renderStudentCodeOrderingUI(q);
+                    }
+                } else {
+                    orderArea.classList.add('hidden');
+                    mcqArea.classList.remove('hidden');
+                    const isPaused = this.roomData.status === 'PAUSED';
+                    mcqArea.innerHTML = (q.options || []).map((opt, idx) => `
+                        <button type="button" ${isPaused ? 'disabled' : ''} onclick="window.app.submitStudentMCQ(${idx})"
+                            class="w-full p-4 rounded-2xl bg-slate-950 hover:bg-cyan-500/20 border-2 border-slate-700 hover:border-cyan-400 text-left font-mono font-bold text-sm sm:text-base text-white transition active:scale-98 flex items-center justify-between">
+                            <span>${this.escapeHtml(opt)}</span>
+                            <i class="ph-bold ph-caret-right text-cyan-400"></i>
+                        </button>
+                    `).join('');
+                }
+            }
+
+            renderStudentCodeOrderingUI(q) {
+                const selectedBox = document.getElementById('student-order-selected');
+                const poolBox = document.getElementById('student-order-pool');
+
+                selectedBox.innerHTML = this.studentCodeOrderSelection.length === 0
+                    ? `<div class="text-slate-500 italic">Belum ada baris dipilih...</div>`
+                    : this.studentCodeOrderSelection.map((blockId, i) => {
+                        const blk = q.codeBlocks.find(b => b.id === blockId);
+                        return `<div class="px-3 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-200">${i + 1}. ${this.escapeHtml(blk?.text || '')}</div>`;
+                    }).join('');
+
+                poolBox.innerHTML = q.codeBlocks.map(blk => {
+                    const alreadyPicked = this.studentCodeOrderSelection.includes(blk.id);
+                    return `
+                        <button type="button" ${alreadyPicked ? 'disabled' : ''} onclick="window.app.pickStudentCodeBlock('${blk.id}')"
+                            class="w-full p-3 rounded-xl border text-left font-mono text-xs transition ${alreadyPicked ? 'bg-slate-900 border-slate-800 text-slate-600' : 'bg-slate-950 border-slate-700 hover:border-purple-400 text-white'}">
+                            [${blk.id}] ${this.escapeHtml(blk.text)}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            pickStudentCodeBlock(blockId) {
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const q = publicQuestions[this.roomData.currentQuestionIndex || 0];
+                if (q && !this.studentCodeOrderSelection.includes(blockId)) {
+                    this.studentCodeOrderSelection.push(blockId);
+                    this.renderStudentCodeOrderingUI(q);
+                }
+            }
+
+            resetStudentCodeOrder() {
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const q = publicQuestions[this.roomData.currentQuestionIndex || 0];
+                this.studentCodeOrderSelection = [];
+                if (q) this.renderStudentCodeOrderingUI(q);
+            }
+
+            async submitStudentCodeOrder() {
+                const publicQuestions = JSON.parse(this.roomData.questionsJSON || '[]');
+                const q = publicQuestions[this.roomData.currentQuestionIndex || 0];
+                if (!q) return;
+                if (this.studentCodeOrderSelection.length < (q.codeBlocks?.length || 4)) {
+                    this.showToast("Susun seluruh potongan baris kode terlebih dahulu!");
+                    return;
+                }
+                await this.sendSubmissionPayload({
+                    orderedIds: this.studentCodeOrderSelection,
+                    choiceIndex: 0
+                });
+            }
+
+            async submitStudentMCQ(choiceIndex) {
+                await this.sendSubmissionPayload({ choiceIndex });
+            }
+
+            async sendSubmissionPayload(extra) {
+                if (!this.roomData || this.roomData.status !== 'PLAYING') return;
+                const qIdx = this.roomData.currentQuestionIndex || 0;
+                const subId = `${this.studentId}_Q${qIdx}`;
+                const subRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'loop_submissions', subId);
+
+                await setDoc(subRef, {
+                    roomCode: this.roomCode,
+                    playerId: this.studentId,
+                    questionIndex: qIdx,
+                    choiceIndex: extra.choiceIndex ?? 0,
+                    orderedIds: extra.orderedIds || null,
+                    submittedAt: Date.now(),
+                    processed: false
+                });
+
+                document.getElementById('student-state-question').classList.add('hidden');
+                document.getElementById('student-state-submitted').classList.remove('hidden');
+                this.playSound('join');
+            }
+
+            populateStudentRevealedState(me, qIdx) {
+                const revealedObj = this.roomData.revealedDataJSON ? JSON.parse(this.roomData.revealedDataJSON) : null;
+                const iconBox = document.getElementById('student-reveal-icon');
+                const titleEl = document.getElementById('student-reveal-title');
+                const ptsEl = document.getElementById('student-reveal-points');
+
+                const answeredThisRound = me && me.lastAnsweredQuestionIndex === qIdx;
+                const isCorrect = answeredThisRound && me.lastAnswerCorrect;
+
+                if (isCorrect) {
+                    iconBox.className = "w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300";
+                    iconBox.innerHTML = `<i class="ph-bold ph-check-fat"></i>`;
+                    titleEl.textContent = "TEPAT SEKALI!";
+                    titleEl.className = "font-display font-black text-2xl text-emerald-400";
+                    ptsEl.textContent = `+${me.lastRoundPoints || 100} Poin ditambahkan!`;
+                } else {
+                    iconBox.className = "w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl bg-rose-500/20 border-2 border-rose-400 text-rose-300";
+                    iconBox.innerHTML = `<i class="ph-bold ph-x-circle"></i>`;
+                    titleEl.textContent = answeredThisRound ? "BELUM TEPAT" : "WAKTU HABIS";
+                    titleEl.className = "font-display font-black text-2xl text-rose-400";
+                    ptsEl.textContent = "+0 Poin • Perhatikan pembahasan di PID!";
+                }
+
+                if (revealedObj) {
+                    document.getElementById('student-reveal-correct').textContent = `Kunci Jawaban: ${revealedObj.correctOptionText}`;
+                    document.getElementById('student-reveal-explanation').textContent = revealedObj.explanation;
+                }
+            }
+
+            populateStudentFinishedState(me) {
+                const sorted = Object.values(this.playersMap).sort((a, b) => (b.score || 0) - (a.score || 0));
+                const myRank = sorted.findIndex(p => p.playerId === this.studentId) + 1;
+                const acc = me && me.answeredCount > 0 ? Math.round((me.correctCount / me.answeredCount) * 100) : 0;
+
+                document.getElementById('student-final-rank').textContent = myRank > 0 ? `#${myRank}` : '-';
+                document.getElementById('student-final-score').textContent = me?.score || 0;
+                document.getElementById('student-final-acc').textContent = `${acc}%`;
+            }
+
+            async addSimulatedBotPlayers() {
+                if (!this.roomCode || !this.user) return;
+                const teamKeys = Object.keys(TEAMS_META);
+                for (let i = 0; i < teamKeys.length; i++) {
+                    await this.ensurePIDTouchRepresentativePlayer(teamKeys[i]);
+                }
+                this.showToast("4 Skuad Tim PID (Class, Object, Init, Method) siap disentuh langsung di layar PID!");
+            }
+
+            openFullLeaderboardModal() {
+                const modal = document.getElementById('modal-full-leaderboard');
+                const content = document.getElementById('modal-leaderboard-content');
+                const sorted = Object.values(this.playersMap).sort((a, b) => (b.score || 0) - (a.score || 0));
+
+                content.innerHTML = sorted.length === 0
+                    ? `<p class="text-center text-slate-400 py-8">Belum ada peserta di ruang ini.</p>`
+                    : sorted.map((p, idx) => {
+                        const acc = p.answeredCount > 0 ? Math.round((p.correctCount / p.answeredCount) * 100) : 0;
+                        const tMeta = TEAMS_META[p.team] || TEAMS_META['CLASS-ARCH'];
+                        return `
+                            <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="font-display font-black text-base text-yellow-300 w-8">#${idx + 1}</span>
+                                    <div>
+                                        <span class="font-bold text-white block">${this.escapeHtml(p.name)}</span>
+                                        <span class="text-xs ${tMeta.color}">${tMeta.name}</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="font-display font-black text-lg text-cyan-300">${p.score || 0} Poin</span>
+                                    <span class="block text-xs text-slate-400">${p.correctCount || 0} Benar • Akurasi ${acc}%</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            closeFullLeaderboardModal() {
+                const modal = document.getElementById('modal-full-leaderboard');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            confirmReturnHome() {
+                const modal = document.getElementById('modal-confirm');
+                document.getElementById('modal-confirm-title').textContent = "Kembali ke Menu Utama?";
+                document.getElementById('modal-confirm-msg').textContent = "Ruang yang sudah dibuat tetap tersimpan di Cloud dan dapat dibuka kembali kapan saja.";
+                const yesBtn = document.getElementById('modal-confirm-yes');
+                yesBtn.onclick = () => {
+                    this.closeConfirmModal();
+                    clearInterval(this.hostTimerInterval);
+                    this.showView('view-landing');
+                };
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            closeConfirmModal() {
+                const modal = document.getElementById('modal-confirm');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            copyRoomCode() {
+                if (!this.roomCode) return;
+                const temp = document.createElement('textarea');
+                temp.value = this.roomCode;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                this.showToast(`Kode Ruang ${this.roomCode} disalin!`);
+            }
+
+            escapeHtml(str) {
+                return String(str || '')
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+        }
+
+        window.onload = function () {
+            window.app = new PythonOOPArenaApp();
+        };
+    </script>
+</body>
+</html>
